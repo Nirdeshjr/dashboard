@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/vacancy/AddVacancy.jsx", "src/app/vacancy/VacancyList.jsx", "src/app/dashboard/card.jsx", "src/app/dashboard/cardsData.js", "src/app/dashboard/Cards.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/Cards.jsx", "src/app/dashboard/cardsData.jsx"],
+  "exclude": ["node_modules"]
+}
