@@ -1,10 +1,74 @@
-import React from 'react';
+"use client"
+
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import axios from 'axios';
+import { Admin } from '@/types/admin';
+import { useRouter } from 'next/navigation';
+
+
+//for tostify success after insert items
+import {ToastContainer ,toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const Login = () => {
+  const [adminData, setAdminData] = useState<Admin>({
+    username: '',
+    password: '',
+    retype_password: '',
+    position: '',
+    user_role: '',
+    profile_image: null,
+  });
+
+
+  //api fetch
+  const getData = () => {
+    axios.get("http://127.0.0.1:8000/api/dashboard/")
+      .then(response => {
+        const fetchedData = response.data[0];
+        setAdminData(fetchedData);
+      })
+      .catch(error => {
+        console.log("The error is ", error);
+      })
+  }
+
+  useEffect(() => {
+    getData();
+  }, [])
+
+
+  //to verify the login
+  const router = useRouter();
+
+  const [uname, setUname] = useState<String>('');
+  const [pass, setPass] = useState<String>('');
+
+  const userVerification = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (uname === adminData.username && pass === adminData.password) {
+      router.push("/dashboard");
+    }
+    else {
+      toast.error('Invalid Username or Password!', {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    }
+  }
+
   return (
     <>
       {/* componen */}
+      <ToastContainer/>
       <section className="min-h-screen flex items-stretch text-white ">
         <div
           className="lg:flex w-1/2 hidden bg-gray-500 bg-no-repeat bg-cover relative items-center"
@@ -36,18 +100,15 @@ const Login = () => {
               <Image src={'/Images/logo.ico'} alt='logo' width={80} height={120} className='' />
               <h2 className='text-xl font-bold'><span className='mr-1 text-amber-600'>eDIT </span><span className='text-blue-600'>Enterprises</span></h2>
             </div>
-            <form action="" className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto">
+            <form action="" className="sm:w-2/3 w-full px-4 lg:px-0 mx-auto" onSubmit={userVerification}>
               <div className="pb-2 pt-4">
-                <input type="email" name="email" id="email" placeholder="Email" className="block w-full p-4 text-lg rounded-sm bg-black" />
+                <input type="text" name="uname" id="uname" placeholder="Username" className="block w-full p-4 text-lg rounded-sm bg-black" onChange={(e) => setUname(e.target.value)} />
               </div>
               <div className="pb-2 pt-4">
-                <input className="block w-full p-4 text-lg rounded-sm bg-black" type="password" name="password" id="password" placeholder="Password" />
-              </div>
-              <div className="text-right text-gray-400 hover:underline hover:text-gray-100">
-                <a href="#">Forgot your password?</a>
+                <input className="block w-full p-4 text-lg rounded-sm bg-black" type="password" name="password" id="password" placeholder="Password" onChange={(e) => setPass(e.target.value)} />
               </div>
               <div className="px-4 pb-2 pt-4">
-                <button className="uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none">sign in</button>
+                <button className="uppercase block w-full p-4 text-lg rounded-full bg-indigo-500 hover:bg-indigo-600 focus:outline-none" type='submit'>sign in</button>
               </div>
 
               <div className="p-4 text-center right-0 left-0 flex justify-center space-x-4 mt-16 lg:hidden ">

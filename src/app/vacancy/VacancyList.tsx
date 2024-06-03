@@ -16,11 +16,12 @@ import TableRow from '@mui/material/TableRow';
 //icon for table
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
 //axios
 import axios from 'axios';
 
-//conform alert
+//confirm alert
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
@@ -34,12 +35,7 @@ import Button from '@mui/material/Button';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 
 //files import
-import EditVacancy from './EditVacancy';
 import AddVacancy from './AddVacancy';
-import { string } from 'prop-types';
-
-
-
 
 const VacancyList = () => {
     //for redirectin add and edit
@@ -75,7 +71,9 @@ const VacancyList = () => {
     const getData = () => {
         axios.get("http://127.0.0.1:8000/api/vacancy/")
             .then(response => {
-                setData(response.data);
+                const fetchedData = response.data;
+                const sortedData = fetchedData.sort((a:Vacancies, b:Vacancies) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+                setData(sortedData);
                 setCopyData(response.data);
             })
             .catch(err => {
@@ -119,7 +117,7 @@ const VacancyList = () => {
                 getData();
             })
             .catch(error => {
-                toast.error(error, {
+                toast.error(error.message, {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -143,7 +141,7 @@ const VacancyList = () => {
         setRows("");
     };
 
-    //for searhc function 
+    //for search function 
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     useEffect(() => {
@@ -167,7 +165,6 @@ const VacancyList = () => {
         }
     }
 
-
     //table responsive sizes
     const [widthTable, setWidthTable] = useState<number>(0);
     const [screenWidth, setScreenwidth] = useState<number>(window.innerWidth);
@@ -183,29 +180,69 @@ const VacancyList = () => {
 
         if (screenWidth < 600 && screenWidth > 0) {
             setWidthTable(300);
-            console.log(widthTable);
         }
         else if (screenWidth < 900 && screenWidth > 600) {
             setWidthTable(800);
-            console.log(widthTable);
         }
         else if (screenWidth > 900) {
             setWidthTable(1400);
-            console.log(widthTable);
         }
 
         return () => {
             window.removeEventListener('resize', handleResize);
-          };
+        };
     }, [screenWidth])
 
+    //sorting according to data
+    const [sortDirections, setSortDirections] = useState({
+        jobTitle: false,
+        position: false,
+        location: false,
+        experience: false,
+        companyOverview: false,
+        deadline: false,
+        noOfHiring: false
+    });
+
+    const handleSort = (column: keyof typeof sortDirections) => {
+        const isAscending = sortDirections[column];
+        const sortedData = [...data].sort((a:Vacancies, b:Vacancies) => {
+            if (column === 'jobTitle') {
+                return isAscending ? b.job_title.localeCompare(a.job_title) : a.job_title.localeCompare(b.job_title);
+            }
+            if (column === 'position') {
+                return isAscending ? b.position_type.localeCompare(a.position_type) : a.position_type.localeCompare(b.position_type);
+            }
+            if (column === 'location') {
+                return isAscending ? b.location.localeCompare(a.location) : a.location.localeCompare(b.location);
+            }
+            if (column === 'experience') {
+                return isAscending ? b.no_experience - a.no_experience : a.no_experience - b.no_experience;
+            }
+            if (column === 'companyOverview') {
+                return isAscending ? b.company_overview.localeCompare(a.company_overview) : a.company_overview.localeCompare(b.company_overview);
+            }
+            if (column === 'deadline') {
+                return isAscending ? new Date(b.deadline).getTime() - new Date(a.deadline).getTime() : new Date(a.deadline).getTime() - new Date(b.deadline).getTime();
+            }
+            if (column === 'noOfHiring') {
+                return isAscending ? b.no_of_hiring - a.no_of_hiring : a.no_of_hiring - b.no_of_hiring;
+            }
+            return 0;
+        });
+        setData(sortedData);
+        setSortDirections(prevState => ({
+            ...prevState,
+            [column]: !isAscending
+        }));
+    };
 
     return (
         <div style={{ overflowX: 'auto' }}>
             <ToastContainer />
             {addVacancy ? (<AddVacancy handleAddVacancy={handleAddVacancy} rows={rows} />) : (
                 <>
-                    <h2 className='font-bold mb-4'>Vacacny</h2>
+                    <h2 className='font-bold mb-4'>Vacancy</h2>
                     <div className="flex justify-between">
                         <div>
                             <input
@@ -216,11 +253,11 @@ const VacancyList = () => {
                                 className='mb-2 px-2 py-2 border-rounded'
                             />
                         </div>
-                        <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
+                        <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
                             Add Vacancy
                         </Button>
                     </div>
-                    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+                    <Paper sx={{ width: '100%', overflow: 'hidden' }} className='mt-4'>
                         <TableContainer sx={{
                             maxHeight: 440,
                             maxWidth: `${widthTable}px`
@@ -228,50 +265,49 @@ const VacancyList = () => {
                             <Table stickyHeader aria-label="sticky table">
                                 <TableHead>
                                     <TableRow>
-                                        <TableCell
-                                            align="left"
-                                            className='font-'
-                                        >
-                                            <p className='font-bold'>Job Title</p>
+                                        <TableCell align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('jobTitle')}>
+                                                <p className='font-bold'>Job Title</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.jobTitle ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>Position</p>
+                                        <TableCell align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('position')}>
+                                                <p className='font-bold'>Position</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.position ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>Location</p>
+                                        <TableCell className='flex' align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('location')}>
+                                                <p className='font-bold'>Location</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.location ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>Experience</p>
+                                        <TableCell align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('experience')}>
+                                                <p className='font-bold'>Experience</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.experience ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>Company Overview</p>
+                                        <TableCell align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('companyOverview')}>
+                                                <p className='font-bold'>Company Overview</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.companyOverview ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="center"
-                                        >
-                                            <p className='font-bold'>Deadline</p>
+                                        <TableCell align="center">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('deadline')}>
+                                                <p className='font-bold'>Deadline</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.deadline ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>No Of Hiring</p>
+                                        <TableCell align="left">
+                                            <div className="table_items flex items-center cursor-pointer" onClick={() => handleSort('noOfHiring')}>
+                                                <p className='font-bold'>No Of Hiring</p>
+                                                <ArrowDownwardIcon fontSize="small" className={sortDirections.noOfHiring ? "rotate-180 transition-all" : ""} />
+                                            </div>
                                         </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
-                                            <p className='font-bold'>Description</p>
-                                        </TableCell>
-                                        <TableCell
-                                            align="left"
-                                        >
+                                        <TableCell align="left">
                                             <p className='font-bold'>Action</p>
                                         </TableCell>
                                     </TableRow>
@@ -281,30 +317,29 @@ const VacancyList = () => {
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((data, index) => {
                                             return (
-                                                <TableRow hover role="checkbox" tabIndex={-1}>
-                                                    <TableCell align='left' key={index}>
+                                                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                                                    <TableCell align='left'>
                                                         {data.job_title}
                                                     </TableCell>
-                                                    <TableCell align='left' key={index}>
+                                                    <TableCell align='left'>
                                                         {data.position_type}
                                                     </TableCell>
-                                                    <TableCell align='left' key={index}>
+                                                    <TableCell align='left'>
                                                         {data.location}
                                                     </TableCell>
-                                                    <TableCell align='center' key={index}>
+                                                    <TableCell align='center'>
                                                         {data.no_experience}
                                                     </TableCell>
-                                                    <TableCell align='left' key={index}>
+                                                    <TableCell align='left'>
                                                         {data.company_overview}
                                                     </TableCell>
-                                                    <TableCell align='center' key={index}>
+                                                    <TableCell align='center'>
                                                         {data.deadline}
                                                     </TableCell>
-                                                    <TableCell align='center' key={index}>
+                                                    <TableCell align='center'>
                                                         {data.no_of_hiring}
                                                     </TableCell>
-                                                    <TableCell align='left' key={index} dangerouslySetInnerHTML={{ __html: data.description }} />
-                                                    <TableCell align='left' key={index}>
+                                                    <TableCell align='left'>
                                                         <div className='flex justify-center'>
                                                             <div className='cursor-pointer text-green-600 mr-2' onClick={() => editFunction(data)}>
                                                                 <EditIcon />
@@ -332,9 +367,8 @@ const VacancyList = () => {
                         />
                     </Paper></>
             )}
-
         </div>
     )
 }
 
-export default VacancyList
+export default VacancyList;

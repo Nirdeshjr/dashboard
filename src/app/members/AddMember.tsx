@@ -10,8 +10,13 @@ import * as yup from "yup";
 
 
 //for tostify success after insert items
-import { ToastContainer, toast ,Bounce  } from 'react-toastify';
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+
+//ckeditor
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 
 const schema = yup.object({
@@ -25,57 +30,125 @@ const schema = yup.object({
 
 
 const AddMember = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm({
-    resolver: yupResolver(schema)
-  });
-  const onSubmit = (data: Members) => {
-    console.log(data);
-    toast.success('Inserted Succesfully', {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-      progress: undefined,
-      theme: "light",
-      transition: Bounce,
-    });
-  }
+
 
   return (
     <>
       <ToastContainer />
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form>
         <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-5">
-          <div>
-            <TextField label="Name" size='small' variant='outlined' fullWidth {...register("name")} />
-            <p className='text-orange-600 text-xs ml-1'>{errors.name?.message}</p>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Name <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="text"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="name"
+              id="name"
+              required
+            />
           </div>
-          <div>
-            <TextField label="Position" size='small' variant='outlined' fullWidth {...register("position")} />
-            <p className='text-orange-600 text-xs ml-1'>{errors.position?.message}</p>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Position <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="text"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="position"
+              id="position"
+              required
+            />
           </div>
-          <div>
-            <TextField label="Salary" size='small' variant='outlined' fullWidth />
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Salary <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="number"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="Salary"
+              id="Salary"
+              required
+            />
           </div>
-          <div>
-            <TextField label="Contact" size='small' variant='outlined' fullWidth {...register("contact")} />
-            <p className='text-orange-600 text-xs ml-1'> {errors.contact?.message}</p>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Status <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <select id="status" name="status" className="border-2 border-gray-300 p-2 w-full double_input">
+              <option value="" disabled selected>Select member status</option>
+              <option value="working">Working</option>
+              <option value="holiday">Holiday</option>
+              <option value="parttime">Part-time</option>
+              <option value="parttime">Remote</option>
+            </select>
           </div>
-          <div>
-            <TextField label="Working Days" size='small' variant='outlined' fullWidth {...register("working_days")} />
-            <p className='text-orange-600 text-xs ml-1'>{errors.working_days?.message}</p>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Contact <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="tel"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="contact"
+              id="contact"
+              required
+            />
           </div>
-          <div>
-            <TextField label="Description" size='small' variant='outlined' fullWidth {...register("description")} />
-            <p className='text-orange-600 text-xs ml-1'>{errors.description?.message}</p>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Working Days (In Week) <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="number"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="work_days"
+              id="work_days"
+              required
+            />
           </div>
+          <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Profile <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <input
+              type="file"
+              className="border-2 border-gray-300 p-2 w-full double_input"
+              name="profile"
+              id="profile"
+              required
+            />
+          </div>
+          
         </div>
-        <div className="flex mt-2 justify-end">
-          <Button variant="outlined" className='mb-2' type="submit">
-            Save
-          </Button>
+        <div className="mb-3 mr-5">
+            <label className="text-xl text-gray-600">
+              Description <span className="text-red-500">*</span>
+            </label>
+            <br />
+            <CKEditor
+              editor={ClassicEditor}
+              onInit={(editor) => {
+              }}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+              }}
+            />
+          </div>
+        <div className="flex justify-end p-1">
+          <button
+            className="p-3 bg-blue-500 text-white hover:bg-blue-400">
+            Submit
+          </button>
         </div>
       </form>
     </>

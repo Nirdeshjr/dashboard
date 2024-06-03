@@ -1,14 +1,12 @@
-import React from 'react';
+import ProfileCards from './profileCards';
 import Layout from '../components/Layout';
 
-const profile = () => {
+const Profile = () => {
   return (
-    <div>
-      <Layout>
-        Profile Page
-      </Layout>
-    </div>
-  )
-}
+    <Layout>
+        <ProfileCards/>
+    </Layout>
+  );
+};
 
-export default profile
+export default Profile;

@@ -15,6 +15,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+import { Collapse } from '@mui/material';
 
 //icon
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -25,6 +26,12 @@ import AttractionsIcon from '@mui/icons-material/Attractions';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import PersonIcon from '@mui/icons-material/Person';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import CollectionsIcon from '@mui/icons-material/Collections';
+import NewspaperIcon from '@mui/icons-material/Newspaper';
+import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -37,6 +44,8 @@ interface Props {
   children: React.ReactNode;
 }
 
+
+
 export default function Layout(props: Props) {
   const { window } = props;
   const { children } = props;
@@ -44,6 +53,7 @@ export default function Layout(props: Props) {
   const [isClosing, setIsClosing] = React.useState(false);
   const router = useRouter();
   const path = usePathname();
+
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -60,6 +70,17 @@ export default function Layout(props: Props) {
     }
   };
 
+  //handle collapse
+  const [IsCollapse, setIsCollapse] = React.useState(false);
+  const handleCollapse = () => {
+    setIsCollapse(!IsCollapse);
+  }
+
+  //logout
+  const handleLogout = () => {
+    router.push('/signup')
+  }
+
   const drawer = (
     <div>
       <Toolbar >
@@ -68,23 +89,22 @@ export default function Layout(props: Props) {
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Members', 'Courses', 'Clients', 'Blog', 'Vacancy', 'Projects','Profile'].map((text, index) => (
+        {['Dashboard', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
           <ListItem key={text} disablePadding
-            className={path.startsWith("/"+text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
-            onClick={()=>{
-              router.push('/'+text.toLocaleLowerCase());
+            className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
+            onClick={() => {
+              router.push('/' + text.toLocaleLowerCase());
             }}
           >
             <ListItemButton>
-              <ListItemIcon className={path.startsWith("/"+text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
+              <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
                 {index === 0 && <DashboardIcon />}
                 {index === 1 && <PeopleIcon />}
                 {index === 2 && <MenuBookIcon />}
                 {index === 3 && <HandshakeIcon />}
-                {index === 4 && <AttractionsIcon />}
-                {index === 5 && <NoteAltIcon />}
-                {index === 6 && <BusinessCenterIcon />}
-                {index === 7 && <PersonIcon />}
+                {index === 4 && <NoteAltIcon />}
+                {index === 5 && <BusinessCenterIcon />}
+                {index === 6 && <PersonIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
@@ -94,37 +114,41 @@ export default function Layout(props: Props) {
 
 
         {/* Can use this if needed dropdown */}
-        {/* <ListItem disablePadding onClick={handleCollapse}>
+        <ListItem disablePadding onClick={handleCollapse}>
           <ListItemButton>
             <ListItemIcon>
-              <MoreIcon />
+              <AttractionsIcon />
             </ListItemIcon>
-            <ListItemText primary="Insert" />
+            <ListItemText primary="Blogs & More" />
           </ListItemButton>
           {IsCollapse ? <KeyboardArrowDownIcon /> : <ChevronRightIcon />}
-        </ListItem> */}
+        </ListItem>
       </List>
+      <Divider />
 
 
       {/* on click to above more option this section will open using collapse */}
-      {/* <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
-          <List className='ml-4'>
-            {['Members', 'Courses', 'Clients', 'Blog', 'Vacancy'].map((text, index) => (
-              <ListItem key={text} disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>
-                    {index === 0 && <PeopleIcon />}
-                    {index === 2 && <MenuBookIcon />}
-                    {index === 3 && <HandshakeIcon />}
-                    {index === 4 && <AttractionsIcon />}
-                    {index === 5 && <NoteAltIcon />}
-                  </ListItemIcon>
-                  <ListItemText primary={text} />
-                </ListItemButton>
-              </ListItem>
-            ))}
-          </List>
-        </Collapse> */}
+      <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
+        <List className='ml-4'>
+          {['Blog', 'Gallery', 'News'].map((text, index) => (
+            <ListItem key={text} disablePadding
+              className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
+              onClick={() => {
+                router.push('/' + text.toLocaleLowerCase());
+              }}
+            >
+              <ListItemButton>
+                <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
+                  {index === 0 && <AttractionsIcon />}
+                  {index === 1 && <CollectionsIcon />}
+                  {index === 2 && <NewspaperIcon />}
+                </ListItemIcon>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Collapse>
     </div>
   );
 
@@ -152,9 +176,14 @@ export default function Layout(props: Props) {
           >
             <DashboardIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Dashboard
-          </Typography>
+          <div className='flex justify-between w-full'>
+            <Typography variant="h6" noWrap component="div">
+              Dashboard
+            </Typography>
+            <div className="logout cursor-pointer" onClick={handleLogout}>
+              <h2>Logout <ExitToAppIcon /></h2>
+            </div>
+          </div>
         </Toolbar>
       </AppBar>
       <Box

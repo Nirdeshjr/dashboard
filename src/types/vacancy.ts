@@ -8,5 +8,5 @@ export type Vacancies={
     deadline: string,
     no_of_hiring: number,
     description: string,
-    vacancy_image: string,
+    vacancy_image: File | null,
 }

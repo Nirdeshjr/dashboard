@@ -6,7 +6,10 @@ const nextConfig = {
         'MYSQL_DATABASE': 'editBackend',
         'MYSQL_USER': 'root',
         'MYSQL_PASSWORD': '',
-    }
+    },
+    images: {
+        domains: ['127.0.0.1'],
+    },
 };
 
 export default nextConfig;

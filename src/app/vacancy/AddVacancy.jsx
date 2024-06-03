@@ -11,8 +11,6 @@ import 'react-toastify/dist/ReactToastify.css';
 //extra import
 import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { Vacancies } from '@/types/vacancy';
-
 
 const AddVacancy = ({ handleAddVacancy, rows }) => {
     //taking inputs and setting the variables
@@ -26,79 +24,72 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
         deadline: rows.deadline,
         no_of_hiring: rows.no_of_hiring,
         description: rows.description,
-        vacancy_image: rows.vacancy_image,
+        vacancy_image: null, // Initialize as null to store the file object
     });
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value,
-        });
+        const { name, value, files } = e.target;
+        if (name === 'vacancy_img') {
+            setFormData({
+                ...formData,
+                vacancy_image: files[0], // Store the file object
+            });
+        } else {
+            setFormData({
+                ...formData,
+                [name]: value,
+            });
+        }
     };
 
     //on submit vacancy if rows exist it is edit else add
-    const submitVacancy = async () => {
-        if (rows) {
-            let id = formData.id;
-            axios.put(`http://127.0.0.1:8000/api/vacancies/${id}/`, formData)
-                .then(response => {
-                    toast('Edited Successfully !', {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                    handleAddVacancy();
-                })
-                .catch(error => {
-                    toast.error(error, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                });
-        }
-        else {
-            axios.post("http://127.0.0.1:8000/api/vacancy/", formData)
-                .then(response => {
-                    toast('Inserted Successfully !', {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                    handleAddVacancy();
-                })
-                .catch(error => {
-                    toast.error(error, {
-                        position: "top-right",
-                        autoClose: 5000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: "light",
-                        transition: Bounce,
-                    });
-                });
+    const submitVacancy = async (e) => {
+        e.preventDefault();
+
+        const formDataToSend = new FormData();
+        formDataToSend.append('job_title', formData.job_title);
+        formDataToSend.append('location', formData.location);
+        formDataToSend.append('position_type', formData.position_type);
+        formDataToSend.append('no_experience', formData.no_experience);
+        formDataToSend.append('company_overview', formData.company_overview);
+        formDataToSend.append('deadline', formData.deadline);
+        formDataToSend.append('no_of_hiring', formData.no_of_hiring);
+        formDataToSend.append('description', formData.description);
+        formDataToSend.append('vacancy_image', formData.vacancy_image);
+
+        try {
+            let response;
+            if (rows) {
+                const id = formData.id;
+                response = await axios.put(`http://127.0.0.1:8000/api/vacancies/${id}/`, formDataToSend);
+            } else {
+                response = await axios.post("http://127.0.0.1:8000/api/vacancy/", formDataToSend);
+            }
+
+            toast('Submitted Successfully!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
+            handleAddVacancy();
+        } catch (error) {
+            toast.error('Submission Failed!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
+            });
         }
     }
 
@@ -109,7 +100,7 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
                 <ArrowBackIcon className='mr-2' />
                 <h2 className='font-bold mb-4'>Go Back</h2>
             </div>
-            <form onSubmit={submitVacancy}>
+            <form onSubmit={submitVacancy} className='mt-2'>
                 <div className="grid sm:grid-cols-1 md:grid-cols-3 gap-5">
                     <div className="mb-4 ">
                         <label className="text-xl text-gray-600">
@@ -225,9 +216,8 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
                         <input
                             type="file"
                             className="border-2 border-gray-300 p-2 w-full"
-                            name="vacancy_img "
-                            id="vacancy_img "
-                            value={formData.vacancy_image}
+                            name="vacancy_img"
+                            id="vacancy_img"
                             required
                             onChange={handleChange}
                         />
@@ -243,15 +233,16 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
                         editor={ClassicEditor}
                         onInit={(editor) => {
                         }}
-                        value={formData.description}
+                        data={formData.description}
                         onChange={(event, editor) => {
                             const data = editor.getData();
                             setFormData({ ...formData, description: data });
                         }}
                     />
                 </div>
-                <div className="flex p-1">
+                <div className="flex p-1 justify-end">
                     <button
+                        type="submit"
                         className="p-3 bg-blue-500 text-white hover:bg-blue-400">
                         Submit
                     </button>
@@ -261,4 +252,4 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
     )
 }
 
-export default AddVacancy
+export default AddVacancy;

@@ -5,67 +5,71 @@ import React, { useState } from 'react';
 //icons
 import Image from 'next/image';
 
-//data type
-import { Course} from '@/types/course';
 
-const Courses = () => {
-    //data
-    const [courseDeatil, setCoursesDetail] = useState<Course[]>(
+//client data tyoe
+import { Client } from '@/types/client';
+
+
+const Clients = () => {
+
+
+    const [clientsDetail, setClientsDetail] = useState<Client[]>(
         [
             {
-                course_name: "React with Next JS",
-                description: "A complete front end development course",
-                duration: 3,
-                detail: "The course will launch on 3rd Dec and last for 3 months, ending on 7th March.",
-                course_img: null,
-                course_extra_img: null,
+                name: "Bonnie Green",
+                review: "Good to work with",
+                contact: 981818818,
+                gmail: "abc@gmail.com",
+                message: "Hello is there any project left you want to give us.",
+                clients_profile: null,
             },
             {
-                course_name: "Node.js with Express",
-                description: "Backend development using Node.js and Express",
-                duration: 4,
-                detail: "The course starts on 1st Jan and will continue for 4 months, concluding on 30th April.",
-                course_img: null,
-                course_extra_img: null,
+                name: "John Doe",
+                review: "Excellent service",
+                contact: 987654321,
+                gmail: "john.doe@example.com",
+                message: "Looking forward to more collaborations.",
+                clients_profile: null,
             },
             {
-                course_name: "Full Stack Development",
-                description: "Comprehensive full stack web development course",
-                duration: 6,
-                detail: "The course begins on 15th Feb and spans 6 months, finishing on 15th August.",
-                course_img: null,
-                course_extra_img: null,
+                name: "Jane Smith",
+                review: "Very professional",
+                contact: 912345678,
+                gmail: "jane.smith@example.com",
+                message: "Can we discuss the next project?",
+                clients_profile: null,
             },
             {
-                course_name: "Python for Data Science",
-                description: "Data science course using Python",
-                duration: 5,
-                detail: "Starting on 10th March, this 5-month course will end on 10th August.",
-                course_img: null,
-                course_extra_img: null,
+                name: "Alice Johnson",
+                review: "Highly recommended",
+                contact: 998877665,
+                gmail: "alice.johnson@example.com",
+                message: "Thank you for the opportunity.",
+                clients_profile: null,
             },
             {
-                course_name: "DevOps with Kubernetes",
-                description: "DevOps practices and Kubernetes management",
-                duration: 3,
-                detail: "The course kicks off on 20th April and runs for 3 months, ending on 20th July.",
-                course_img: null,
-                course_extra_img: null,
+                name: "Bob Brown",
+                review: "Great experience",
+                contact: 887766554,
+                gmail: "bob.brown@example.com",
+                message: "Let's schedule a meeting for the next steps.",
+                clients_profile: null,
             }
-        ])
+        ]
+    );
 
 
-    //dropdown
-    const [getIDToogle, setGetIDToogle] = useState<number | null>(false);
+    //toogle edit and delete
+    const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
 
     const toggleDropdown = (id:number) => {
-        setGetIDToogle (getIDToogle === id ? null: id);
+        setDropdownOpenIndex(dropdownOpenIndex === id ? null : id);
     };
 
     return (
         <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                {courseDeatil.map((course, index) => (
+                {clientsDetail.map((client,index) => (
                     <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow relative" key={index}>
                         <div className="flex justify-end px-4 pt-4">
                             <button
@@ -82,7 +86,7 @@ const Courses = () => {
                             {/* Dropdown menu */}
                             <div
                                 id="dropdown"
-                                className={`z-10 ${getIDToogle ? '' : 'hidden'} text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-4 top-12`}
+                                className={`z-10 ${dropdownOpenIndex === index? '' : 'hidden'} text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-4 top-12`}
                             >
                                 <ul className="py-2" aria-labelledby="dropdownButton">
                                     <li>
@@ -96,10 +100,11 @@ const Courses = () => {
                         </div>
                         <div className="flex flex-col items-center pb-10">
                             <Image className="w-24 h-24 mb-3 rounded-full shadow-lg" src="/Images/react.png" alt="Bonnie image" width={90} height={70} />
-                            <h5 className="mb-1 text-xl font-medium text-gray-900">{course.course_name}</h5>
-                            <span className="text-sm text-gray-500 ">{course.duration} months</span>
+                            <h5 className="mb-1 text-xl font-medium text-gray-900">{client.name}</h5>
+                            <span className="text-sm text-gray-500 ">{client.review}</span>
                             <div className="flex mt-4 md:mt-6">
-                                <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">See More Detail</a>
+                                <a href="#" className="inline-flex items-center px-4 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 ">{client.contact}</a>
+                                <a href="#" className="py-2 px-4 ms-2 text-sm font-medium text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-100">Message</a>
                             </div>
                         </div>
                     </div>
@@ -109,4 +114,4 @@ const Courses = () => {
     );
 };
 
-export default Courses;
+export default Clients;
