@@ -2,6 +2,7 @@
 
 
 import * as React from 'react';
+import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -13,102 +14,28 @@ import TableRow from '@mui/material/TableRow';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Members } from '@/types/members';
+import ControlPointIcon from '@mui/icons-material/ControlPoint';
+import Button from '@mui/material/Button';
+
+//componenets
+import AddMember from "./AddMember"
+
+//axios
+import axios from 'axios';
+
+//confirm alert
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css';
+
+//toast
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function MemberList() {
+
+  //page change
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-
-  const data: Members[] = [
-    {
-      name: 'Pasang',
-      position: 'Senior Developer',
-      salary: 10000,
-      contact: 9811110000,
-      working_days: 3,
-      description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Minima odio reprehenderit ipsa.',
-    },
-    {
-      name: 'Sonam',
-      position: 'Junior Developer',
-      salary: 8000,
-      contact: 9811120000,
-      working_days: 5,
-      description: 'Dolore magnam commodi quas numquam explicabo porro soluta quidem.',
-    },
-    {
-      name: 'Lakpa',
-      position: 'Project Manager',
-      salary: 12000,
-      contact: 9811130000,
-      working_days: 4,
-      description: 'Fugiat voluptate odio quam quis, natus sunt temporibus hic aliquam.',
-    },
-    {
-      name: 'Tashi',
-      position: 'UI/UX Designer',
-      salary: 9000,
-      contact: 9811140000,
-      working_days: 3,
-      description: 'Temporibus dolorem asperiores voluptate dicta ad magnam sequi.',
-    },
-    {
-      name: 'Nima',
-      position: 'System Analyst',
-      salary: 11000,
-      contact: 9811150000,
-      working_days: 5,
-      description: 'Nostrum placeat autem odio sunt quod veritatis consequuntur.',
-    },
-    {
-      name: 'Karma',
-      position: 'DevOps Engineer',
-      salary: 11500,
-      contact: 9811160000,
-      working_days: 4,
-      description: 'Repellendus tempora amet atque consectetur fugiat dolorum.',
-    },
-    {
-      name: 'Pemba',
-      position: 'Database Administrator',
-      salary: 10500,
-      contact: 9811170000,
-      working_days: 5,
-      description: 'Accusamus ipsam voluptas pariatur maiores suscipit est.',
-    },
-    {
-      name: 'Dawa',
-      position: 'Frontend Developer',
-      salary: 9500,
-      contact: 9811180000,
-      working_days: 3,
-      description: 'Inventore obcaecati veniam tempore modi incidunt quas.',
-    },
-    {
-      name: 'Mingma',
-      position: 'Backend Developer',
-      salary: 10200,
-      contact: 9811190000,
-      working_days: 4,
-      description: 'Deserunt blanditiis fuga labore libero nisi sunt.',
-    },
-    {
-      name: 'Phurba',
-      position: 'Software Tester',
-      salary: 9800,
-      contact: 9811200000,
-      working_days: 5,
-      description: 'Architecto exercitationem explicabo doloremque facilis deleniti.',
-    },
-    {
-      name: 'Dorjee',
-      position: 'Network Engineer',
-      salary: 10800,
-      contact: 9811210000,
-      working_days: 4,
-      description: 'Ratione excepturi nihil quo dolorum quaerat eveniet.',
-    }
-  ];
-
 
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage);
@@ -119,114 +46,213 @@ export default function MemberList() {
     setPage(0);
   };
 
-  const deleteFunction = (data:Members) => {
-    console.log(data);
+  //to toogle
+  const [addUser, setAddUser] = useState(false);
+  const handleChange = () => {
+    setAddUser(false);
+  }
+
+  //data fetch
+  const [data, setData] = useState<Members[]>([]);
+  const [rows, setRows] = useState<Members>();
+
+
+  const getData = () => {
+    axios.get("http://127.0.0.1:8000/api/member/")
+      .then(response => {
+        const fetchedData = response.data;
+        setData(fetchedData);
+      })
+      .catch(err => {
+        console.log("Error ", err);
+      })
+  }
+
+  useEffect(() => {
+    getData();
+  }, [addUser]);
+
+  //add function
+  const addFunction = () => {
+    setAddUser(true);
+    setRows("");
+  }
+
+  //edit fucntion
+  const editFunction = (data: Members) => {
+    setAddUser(true);
+    setRows(data);
   };
 
-  const editFunction = (data:Members) => {
-    console.log(data);
+
+  //delete function
+  const deleteFunction = (data: Members) => {
+    confirmAlert({
+      title: 'Confirm to submit',
+      message: 'Are you sure you want to delete this data?',
+      buttons: [
+        {
+          label: 'Yes',
+          onClick: () => deleteRow(data)
+        },
+        {
+          label: 'No',
+        }
+      ]
+    });
   };
+
+
+  const deleteRow = async (data: Members) => {
+    let id = data.id;
+
+    axios.delete(`http://127.0.0.1:8000/api/member/${id}/`)
+      .then(response => {
+        toast('Deleted Successfully !', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+        getData();
+      })
+      .catch(error => {
+        toast.error(error.message, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      });
+  }
+
 
   return (
-    <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-      <TableContainer sx={{ maxHeight: 440 }}>
-        <Table stickyHeader aria-label="sticky table">
-          <TableHead>
-            <TableRow>
-              <TableCell
-                align="left"
-                style={{ minWidth: "100" }}
-              >
-                <p className='font-bold'>Name</p> 
-              </TableCell>
-              <TableCell
-                align="left"
-                style={{ minWidth: "100" }}
-              >
-                <p className='font-bold'>Position</p> 
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ minWidth: "50" }}
-              >
-                <p className='font-bold'>Salary</p> 
-              </TableCell>
-              <TableCell
-                align="left"
-                style={{ minWidth: "50" }}
-              >
-                <p className='font-bold'>Contatct</p> 
-              </TableCell>
-              <TableCell
-                align="center"
-                style={{ minWidth: "50" }}
-              >
-                <p className='font-bold'>Working Days</p> 
-              </TableCell>
-              <TableCell
-                align="center"
-                style={{ minWidth: "50" }}
-              >
-                <p className='font-bold'>Description</p> 
-              </TableCell>
-              <TableCell
-                align="right"
-                style={{ minWidth: "100" }}
-              >
-                <p className='font-bold'>Action</p> 
-              </TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {data
-              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map((data, index) => {
-                return (
-                  <TableRow hover role="checkbox" tabIndex={-1}>
-                    <TableCell align='left' key={index}>
-                      {data.name}
+    <>
+      {addUser ? (
+        <AddMember handleAddSection={handleChange} rows={rows} />
+
+      ) : (
+        <>
+          <ToastContainer />
+          <div className="flex justify-between">
+            <h2 className='font-bold mb-4'>Members</h2>
+            <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
+              Add User
+            </Button>
+          </div>
+          <Paper sx={{ width: '100%', overflow: 'hidden' }}>
+            <TableContainer sx={{ maxHeight: 440 }}>
+              <Table stickyHeader aria-label="sticky table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell
+                      align="left"
+                      style={{ minWidth: "100" }}
+                    >
+                      <p className='font-bold'>Name</p>
                     </TableCell>
-                    <TableCell align='left' key={index}>
-                      {data.position}
+                    <TableCell
+                      align="left"
+                      style={{ minWidth: "100" }}
+                    >
+                      <p className='font-bold'>Position</p>
                     </TableCell>
-                    <TableCell align='right' key={index}>
-                      {data.salary}
+                    <TableCell
+                      align="right"
+                      style={{ minWidth: "50" }}
+                    >
+                      <p className='font-bold'>Salary</p>
                     </TableCell>
-                    <TableCell align='center' key={index}>
-                      {data.contact}
+                    <TableCell
+                      align="center"
+                      style={{ minWidth: "50" }}
+                    >
+                      <p className='font-bold'>Contact</p>
                     </TableCell>
-                    <TableCell align='center' key={index}>
-                      {data.working_days}
+                    <TableCell
+                      align="center"
+                      style={{ minWidth: "50" }}
+                    >
+                      <p className='font-bold'>Working Days</p>
                     </TableCell>
-                    <TableCell align='left' key={index}>
-                      {data.description}
+                    <TableCell
+                      align="center"
+                      style={{ minWidth: "50" }}
+                    >
+                      <p className='font-bold'>Description</p>
                     </TableCell>
-                    <TableCell align='right' key={index}>
-                      <div className='flex justify-center'>
-                        <div className='cursor-pointer text-green-600 mr-2' onClick={()=>editFunction(data)}>
-                          <EditIcon/>
-                        </div>
-                        <div className='cursor-pointer text-orange-600' onClick={()=>deleteFunction(data)}>
-                          <DeleteIcon/>
-                        </div>
-                      </div>
+                    <TableCell
+                      align="right"
+                      style={{ minWidth: "100" }}
+                    >
+                      <p className='font-bold'>Action</p>
                     </TableCell>
                   </TableRow>
-                )
-              })
-            }
-          </TableBody>
-        </Table>
-      </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
-        component="div"
-        count={data.length}
-        rowsPerPage={rowsPerPage}
-        page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
-    </Paper>
+                </TableHead>
+                <TableBody>
+                  {data
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((data, index) => {
+                      return (
+                        <TableRow hover role="checkbox" tabIndex={-1}>
+                          <TableCell align='left' key={index}>
+                            {data.member_name}
+                          </TableCell>
+                          <TableCell align='left' key={index}>
+                            {data.position}
+                          </TableCell>
+                          <TableCell align='right' key={index}>
+                            {data.salary}
+                          </TableCell>
+                          <TableCell align='center' key={index}>
+                            {data.phone}
+                          </TableCell>
+                          <TableCell align='center' key={index}>
+                            {data.working_days}
+                          </TableCell>
+                          <TableCell align='center' key={index}>
+                            {data.description}
+                          </TableCell>
+                          <TableCell align='right' key={index}>
+                            <div className='flex justify-center'>
+                              <div className='cursor-pointer text-green-600 mr-2' onClick={() => editFunction(data)}>
+                                <EditIcon />
+                              </div>
+                              <div className='cursor-pointer text-orange-600' onClick={() => deleteFunction(data)}>
+                                <DeleteIcon />
+                              </div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      )
+                    })
+                  }
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 100]}
+              component="div"
+              count={data.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </Paper>
+        </>
+      )}
+    </>
   );
 }

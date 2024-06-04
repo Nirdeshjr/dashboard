@@ -1,9 +1,12 @@
 export type Members ={
-    name: string;
-    position: string;
-    salary: number;
-    contact: number;
-    working_days: number;
-    description: string;
+    id: number,
+    member_name: string,
+    position: string,
+    salary: number,
+    status: string,
+    phone: string,
+    working_days: number,
+    member_profile: File | null,
+    description: string,
 };
   
