@@ -37,6 +37,7 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 //files import
 import AddVacancy from './AddVacancy';
 
+
 const VacancyList = () => {
     //for redirectin add and edit
     const [addVacancy, setAddVacancy] = useState(false);
@@ -237,6 +238,10 @@ const VacancyList = () => {
         }));
     };
 
+    const redirectTo = () => {
+    window.open("https://docs.google.com/spreadsheets/d/1dVKkLMzW-nusmeFDQL7sPXVYwVRBZ9WL1sV0hHDeXFg/edit#gid=2044851529", "_blank");
+    }
+
     return (
         <div style={{ overflowX: 'auto' }}>
             <ToastContainer />
@@ -253,9 +258,14 @@ const VacancyList = () => {
                                 className='mb-2 px-2 py-2 border-rounded'
                             />
                         </div>
-                        <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
+                        <div>
+                        <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => redirectTo()}>
+                            See the Applicant
+                        </Button>
+                        <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => addFunction()} style={{marginLeft: '4px' }}>
                             Add Vacancy
                         </Button>
+                        </div>
                     </div>
                     <Paper sx={{ width: '100%', overflow: 'hidden' }} className='mt-4'>
                         <TableContainer sx={{
