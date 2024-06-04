@@ -1,4 +1,5 @@
 export type ProjectDataType = {
+    id: number,
     project_name : string,
     no_of_members: number,
     deadline: string,

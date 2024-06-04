@@ -73,7 +73,7 @@ const VacancyList = () => {
         axios.get("http://127.0.0.1:8000/api/vacancy/")
             .then(response => {
                 const fetchedData = response.data;
-                const sortedData = fetchedData.sort((a:Vacancies, b:Vacancies) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
+                const sortedData = fetchedData.sort((a: Vacancies, b: Vacancies) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
                 setData(sortedData);
                 setCopyData(response.data);
             })
@@ -83,7 +83,6 @@ const VacancyList = () => {
     }
 
     const deleteFunction = (data: Vacancies) => {
-
         confirmAlert({
             title: 'Confirm to submit',
             message: 'Are you sure you want to delete this data?',
@@ -207,7 +206,7 @@ const VacancyList = () => {
 
     const handleSort = (column: keyof typeof sortDirections) => {
         const isAscending = sortDirections[column];
-        const sortedData = [...data].sort((a:Vacancies, b:Vacancies) => {
+        const sortedData = [...data].sort((a: Vacancies, b: Vacancies) => {
             if (column === 'jobTitle') {
                 return isAscending ? b.job_title.localeCompare(a.job_title) : a.job_title.localeCompare(b.job_title);
             }
@@ -375,7 +374,8 @@ const VacancyList = () => {
                             onPageChange={handleChangePage}
                             onRowsPerPageChange={handleChangeRowsPerPage}
                         />
-                    </Paper></>
+                    </Paper>
+                </>
             )}
         </div>
     )
