@@ -18,6 +18,9 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 
+//icon for the applicant
+import FileCopyIcon from '@mui/icons-material/FileCopy';
+
 //axios
 import axios from 'axios';
 
@@ -258,7 +261,7 @@ const VacancyList = () => {
                             />
                         </div>
                         <div>
-                        <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => redirectTo()}>
+                        <Button variant="outlined" endIcon={<FileCopyIcon />} onClick={() => redirectTo()}>
                             See the Applicant
                         </Button>
                         <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => addFunction()} style={{marginLeft: '4px' }}>

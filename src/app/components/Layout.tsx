@@ -26,6 +26,7 @@ import AttractionsIcon from '@mui/icons-material/Attractions';
 import NoteAltIcon from '@mui/icons-material/NoteAlt';
 import BusinessCenterIcon from '@mui/icons-material/BusinessCenter';
 import PersonIcon from '@mui/icons-material/Person';
+import InboxIcon from '@mui/icons-material/Inbox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CollectionsIcon from '@mui/icons-material/Collections';
@@ -89,7 +90,7 @@ export default function Layout(props: Props) {
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
+        {['Dashboard', 'inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
           <ListItem key={text} disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
@@ -99,12 +100,13 @@ export default function Layout(props: Props) {
             <ListItemButton>
               <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
                 {index === 0 && <DashboardIcon />}
-                {index === 1 && <PeopleIcon />}
-                {index === 2 && <MenuBookIcon />}
-                {index === 3 && <HandshakeIcon />}
-                {index === 4 && <NoteAltIcon />}
-                {index === 5 && <BusinessCenterIcon />}
-                {index === 6 && <PersonIcon />}
+                {index === 1 && <InboxIcon />}
+                {index === 2 && <PeopleIcon />}
+                {index === 3 && <MenuBookIcon />}
+                {index === 4 && <HandshakeIcon />}
+                {index === 5 && <NoteAltIcon />}
+                {index === 6 && <BusinessCenterIcon />}
+                {index === 7 && <PersonIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
