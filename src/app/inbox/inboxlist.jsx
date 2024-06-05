@@ -1,4 +1,6 @@
-import React from 'react';
+"use client"
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import TextField from '@mui/material/TextField';
 import IconButton from '@mui/material/IconButton';
 import Checkbox from '@mui/material/Checkbox';
@@ -6,11 +8,54 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import RefreshIcon from '@mui/icons-material/Refresh';
 
 const Inbox = () => {
-  const messages = [
-    { sender: 'Musharof Chowdhury', subject: 'Some note & Lorem Ipsum available alteration in some form.', date: '17 Oct, 2024' },
-    { sender: 'Naimur Rahman', subject: 'Lorem Ipsum available alteration in some form.', date: '25 Nov, 2024' },
-    { sender: 'Juhan Ahamed', subject: 'Lorem Ipsum available alteration in some form.', date: '25 Nov, 2024' },
-  ];
+  const [message, setMessage] = useState([]);
+  
+  useEffect(() => {
+    fetchMessage();
+  }, []);
+
+  const fetchMessage = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:8000/api/support/');
+      setMessage(response.data);
+      setCopyData(response.data);
+    } catch (error) {
+      console.error("Error while fetching messages:", error);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    console.log(id)
+    try {
+      await axios.delete(`http://127.0.0.1:8000/api/support/${id}/`);
+      fetchMessage();
+    } catch (error) {
+      console.error("Error while deleting message:", error);
+    }
+  };
+  
+  const [searchQuery, setSearchQuery] = useState('');
+
+  useEffect(() => {
+      searchData(searchQuery);
+  }, [searchQuery])
+
+  const [copyData, setCopyData] = useState(message);
+
+  const searchData = (searchQuery) => {
+      let filterData = message;
+      if (searchQuery) {
+          filterData = message.filter(support =>
+              support.name.toLowerCase().includes(searchQuery.toLocaleLowerCase()) ||
+              support.email.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+          );
+          setMessage(filterData);
+      }
+      else {
+          setMessage(copyData);
+      }
+  }
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">
@@ -21,16 +66,17 @@ const Inbox = () => {
             variant="outlined"
             placeholder="Search for user, email address..."
             size="small"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            
           />
         </div>
         <div className="flex justify-between items-center p-4 border-b border-gray-200">
           <div className="flex space-x-4">
-            <IconButton>
+            <IconButton onClick={fetchMessage}>
               <RefreshIcon />
             </IconButton>
-            <IconButton>
-              <DeleteIcon />
-            </IconButton>
+
           </div>
         </div>
         <div className="overflow-x-auto">
@@ -38,22 +84,29 @@ const Inbox = () => {
             <thead>
               <tr>
                 <th className="py-2 px-4 border-b text-center">
-                
                 </th>
                 <th className="py-2 px-4 border-b">Sender</th>
+                <th className="py-2 px-4 border-b">Email</th>
                 <th className="py-2 px-4 border-b">Subject</th>
                 <th className="py-2 px-4 border-b">Date</th>
+                <th className="py-2 px-4 border-b">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {messages.map((message, index) => (
-                <tr key={index} className="hover:bg-gray-100">
+              {message.map((msg) => (
+                <tr key={msg.id} className="hover:bg-gray-100">
                   <td className="py-2 px-4 border-b text-center">
                     <Checkbox />
                   </td>
-                  <td className="py-2 px-4 border-b">{message.sender}</td>
-                  <td className="py-2 px-4 border-b">{message.subject}</td>
-                  <td className="py-2 px-4 border-b">{message.date}</td>
+                  <td className="py-2 px-4 border-b">{msg.name}</td>
+                  <td className="py-2 px-4 border-b">{msg.email}</td>
+                  <td className="py-2 px-4 border-b">{msg.message}</td>
+                  <td className="py-2 px-4 border-b">{msg.date}</td>
+                  <td className="py-2 px-4 border-b text-center">
+                    <IconButton style={{ color: 'red' }} onClick={() => handleDelete(msg.id)}>
+                      <DeleteIcon />
+                    </IconButton>
+                  </td>
                 </tr>
               ))}
             </tbody>

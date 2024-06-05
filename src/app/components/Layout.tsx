@@ -90,7 +90,7 @@ export default function Layout(props: Props) {
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
+        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
           <ListItem key={text} disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
