@@ -1,9 +1,9 @@
 export type Client ={
-    name: string;
+    id: number;
+    client_name: string;
+    number: number;
     review: string;
-    contact: number;
     gmail: string;
-    message: string;
-    clients_profile: File | null;
+    client_image: string | null;
 };
   

@@ -4,5 +4,5 @@ export type Admin = {
     retype_password: string,
     position: string,
     user_role: string,
-    profile_image: File | null,
+    profile_image: string | null,
 }

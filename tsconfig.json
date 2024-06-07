@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/vacancy/AddVacancy.jsx", "src/app/vacancy/VacancyList.jsx", "src/app/dashboard/card.jsx", "src/app/dashboard/cardsData.js", "src/app/dashboard/Cards.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/Cards.jsx", "src/app/dashboard/cardsData.jsx", "src/app/profile/profileCards.tsx", "src/app/profile/editProfile.tsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/vacancy/AddVacancy.jsx", "src/app/vacancy/VacancyList.jsx", "src/app/dashboard/card.jsx", "src/app/dashboard/cardsData.js", "src/app/dashboard/Cards.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/Cards.jsx", "src/app/dashboard/cardsData.jsx", "src/app/profile/profileCards.tsx", "src/app/profile/editProfile.tsx", "src/app/courses/addCourse.jsx", "src/app/clients/addClients.jsx"],
   "exclude": ["node_modules"]
 }
