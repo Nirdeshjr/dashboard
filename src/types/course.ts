@@ -1,9 +1,10 @@
 export type Course ={
-    course_name: string;
-    description: string;
-    duration: number;
-    detail: string;
-    course_img: File | null;
-    course_extra_img: File | null;
+    id: number,
+    course_name: string,
+    description: string,
+    duration: number,
+    detail: string,
+    course_image: string | null,
+    course_extra_img: string | null,
 };
   

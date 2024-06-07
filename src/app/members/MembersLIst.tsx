@@ -61,7 +61,9 @@ export default function MemberList() {
     axios.get("http://127.0.0.1:8000/api/member/")
       .then(response => {
         const fetchedData = response.data;
-        setData(fetchedData);
+        const sortedData = fetchedData.sort((a: Members, b: Members) => a.member_name.localeCompare(b.member_name));
+        setData(sortedData);
+        setCopyData(response.data);
       })
       .catch(err => {
         console.log("Error ", err);
@@ -75,7 +77,7 @@ export default function MemberList() {
   //add function
   const addFunction = () => {
     setAddUser(true);
-    setRows("");
+    setRows("")
   }
 
   //edit fucntion
@@ -137,6 +139,27 @@ export default function MemberList() {
   }
 
 
+  //for search function 
+  const [copyData, setCopyData] = useState<Members[]>([]);//copying to use later in the filtering process
+  const [searchQuery, setSearchQuery] = useState<string>('');
+
+  useEffect(() => {
+    searchData(searchQuery);
+  }, [searchQuery])
+
+  const searchData = (searchQuery: string) => {
+    let filterData: Members[] = data;
+    if (searchQuery) {
+      filterData = data.filter(member =>
+        member.member_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+      )
+      setData(filterData);
+    }
+    else {
+      setData(copyData);
+    }
+  }
+
   return (
     <>
       {addUser ? (
@@ -145,8 +168,15 @@ export default function MemberList() {
       ) : (
         <>
           <ToastContainer />
-          <div className="flex justify-between">
-            <h2 className='font-bold mb-4'>Members</h2>
+          <h2 className='font-bold mb-4'>Members</h2>
+          <div className="flex justify-between mb-2">
+            <input
+              type="text"
+              placeholder='search members'
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className='mb-2 px-2 py-2 border-rounded'
+            />
             <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
               Add User
             </Button>

@@ -43,13 +43,13 @@ const ProfileCards = () => {
   return (
     <>
       {editProfile ? (
-        <EditProfile editProfileHandle={handleEdit} adminData= {adminData}/>
+        <EditProfile editProfileHandle={handleEdit} adminData={adminData} />
       ) : (
         <>
           <h2 className="font-bold text-lg">Profile</h2>
           <div className="min-h-screen flex justify-center bg-gray-100">
             <div className="bg-white w-full max-w-md rounded-lg shadow-lg overflow-hidden">
-              <div className="relative w-full h-72"> {/* Set a specific height */}
+              <div className="relative w-full h-72">
                 <Image
                   src="/Images/profile_bg.png"
                   alt="Profile background"
@@ -68,14 +68,14 @@ const ProfileCards = () => {
                   <div className="relative w-24 h-24 bg-white rounded-full overflow-hidden border-4 border-white">
                     {adminData.profile_image ? (
                       <Image
-                        src='/Images/react.png'
+                        src={adminData.profile_image} 
                         alt="Profile picture"
                         layout="fill"
                         objectFit="cover"
                       />
                     ) : (
                       <Image
-                        src="/Images/react.png"
+                        src="/Images/profile_placeholder.png"
                         alt="Profile picture placeholder"
                         layout="fill"
                         objectFit="cover"
