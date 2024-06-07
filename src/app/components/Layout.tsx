@@ -132,7 +132,7 @@ export default function Layout(props: Props) {
       {/* on click to above more option this section will open using collapse */}
       <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
         <List className='ml-4'>
-          {['Blog', 'Gallery', 'News'].map((text, index) => (
+          {['Blog', 'Products', 'News'].map((text, index) => (
             <ListItem key={text} disablePadding
               className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
               onClick={() => {
@@ -142,7 +142,7 @@ export default function Layout(props: Props) {
               <ListItemButton>
                 <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
                   {index === 0 && <AttractionsIcon />}
-                  {index === 1 && <CollectionsIcon />}
+                  {index === 1 && <BusinessCenterIcon />}
                   {index === 2 && <NewspaperIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />

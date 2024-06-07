@@ -122,25 +122,25 @@ const Courses = () => {
     }
 
     //for search function 
-  const [copyData, setCopyData] = useState<Course[]>([]);//copying to use later in the filtering process
-  const [searchQuery, setSearchQuery] = useState<string>('');
+    const [copyData, setCopyData] = useState<Course[]>([]);//copying to use later in the filtering process
+    const [searchQuery, setSearchQuery] = useState<string>('');
 
-  useEffect(() => {
-    searchData(searchQuery);
-  }, [searchQuery])
+    useEffect(() => {
+        searchData(searchQuery);
+    }, [searchQuery])
 
-  const searchData = (searchQuery: string) => {
-    let filterData: Course[] = courseDeatil;
-    if (searchQuery) {
-      filterData = courseDeatil.filter(course =>
-        course.course_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
-      )
-      setCoursesDetail(filterData);
+    const searchData = (searchQuery: string) => {
+        let filterData: Course[] = courseDeatil;
+        if (searchQuery) {
+            filterData = courseDeatil.filter(course =>
+                course.course_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+            )
+            setCoursesDetail(filterData);
+        }
+        else {
+            setCoursesDetail(copyData);
+        }
     }
-    else {
-        setCoursesDetail(copyData);
-    }
-  }
 
     return (
         <>

@@ -85,7 +85,16 @@ const Projects: React.FC<ProjectsProps> = (props) => {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="h6" gutterBottom component="div" className='font-bold'>
-                Progress
+                <div className="flex justify-between">
+                  <div className="progress">
+                    <p>Progress</p>
+                  </div>
+                  <div className="Add ml-2">
+                    <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
+                      Add Progress
+                    </Button>
+                  </div>
+                </div>
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
