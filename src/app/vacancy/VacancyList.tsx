@@ -241,7 +241,7 @@ const VacancyList = () => {
     };
 
     const redirectTo = () => {
-    window.open("https://docs.google.com/spreadsheets/d/1dVKkLMzW-nusmeFDQL7sPXVYwVRBZ9WL1sV0hHDeXFg/edit#gid=2044851529", "_blank");
+    window.open("https://docs.google.com/spreadsheets/d/1Mtx7Oy9IKjJE-Y-vGVcc4o9l9q8sjFU3Xw-HnUjg6sU/edit?resourcekey#gid=1418698129", "_blank");
     }
 
     return (
