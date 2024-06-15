@@ -41,34 +41,47 @@ const EditProfile = ({ editProfileHandle, adminData }) => {
     formDataToSend.append('user_role', formData.user_role);
     formDataToSend.append('profile_image', formData.profile_image);
 
-    try {
+    if (formData.password !== formData.retype_password) {
+      toast.error('Passwords do not match!', {
+        position: "top-right", autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
+    } else {
+      try {
         const id = formData.id;
         const response = await axios.put(`http://127.0.0.1:8000/api/dashboard/${id}/`, formDataToSend);
         toast('Submitted Successfully!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
         });
         editProfileHandle();
-    } catch (error) {
+      } catch (error) {
         console.error('Submission Failed:', error);
         toast.error('Submission Failed!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "light",
-            transition: Bounce,
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
         });
+      }
     }
   }
 

@@ -1,6 +1,12 @@
 import React, { useState } from "react";
+
+//icon
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+
+//axios
 import axios from "axios"; // Ensure axios is imported
+
+//toast msg
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -32,10 +38,9 @@ const AddProjects = ({ handleProjectsToogle, data }) => {
       no_of_members: formData.no_of_members,
       status: formData.status,
       deadline: formData.deadline,
-      requirements: formData.requirements,
-      updates: formData.updates,
-      future_plans: formData.future_plans,
     };
+
+    
 
     try {
       let response;
@@ -148,51 +153,6 @@ const AddProjects = ({ handleProjectsToogle, data }) => {
               <option value="Completed">Completed</option>
               <option value="On Hold">On Hold</option>
             </select>
-          </div>
-          <div className="mb-3 mr-5">
-            <label className="text-xl text-gray-600">
-              Updates <span className="text-red-500">*</span>
-            </label>
-            <br />
-            <input
-              type="text"
-              className="border-2 border-gray-300 p-2 w-full double_input"
-              name="updates"
-              id="updates"
-              value={formData.updates}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3 mr-5">
-            <label className="text-xl text-gray-600">
-              Requirements <span className="text-red-500">*</span>
-            </label>
-            <br />
-            <input
-              type="text"
-              className="border-2 border-gray-300 p-2 w-full double_input"
-              name="requirements"
-              id="requirements"
-              value={formData.requirements}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div className="mb-3 mr-5">
-            <label className="text-xl text-gray-600">
-              Future Plan / Steps <span className="text-red-500">*</span>
-            </label>
-            <br />
-            <input
-              type="text"
-              className="border-2 border-gray-300 p-2 w-full double_input"
-              name="future_plans"
-              id="future_plans"
-              value={formData.future_plans}
-              onChange={handleChange}
-              required
-            />
           </div>
         </div>
         <div className="flex justify-end p-1">

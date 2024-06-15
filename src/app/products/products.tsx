@@ -116,6 +116,7 @@ const Products = () => {
         }
     }
 
+    
     useEffect(() => {
         searchData(searchQuery);
     }, [searchQuery])

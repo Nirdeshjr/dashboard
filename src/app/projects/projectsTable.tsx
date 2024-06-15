@@ -13,43 +13,47 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import AddProjects from './addProjects';
-
-// Confirm alert
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
-// Toast messages
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-
-// Icons
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import axios from 'axios';
-
-// Data type
 import { ProjectDataType } from '@/types/projects';
+import { ProgressDataType } from '@/types/progress';
+import AddProgress from './addProgress';
 
 type ProjectsProps = {
-  row: ProjectDataType;
+  projectData: ProjectDataType;
+  progressData: ProgressDataType[];
   editFunction: (data: ProjectDataType) => void;
   deleteFunction: (data: ProjectDataType) => void;
+  setProgressToggle: (state: boolean) => void;
+  setProjectDataForProgress: (data: ProjectDataType) => void;
 };
 
 const Projects: React.FC<ProjectsProps> = (props) => {
-  const { row, editFunction, deleteFunction } = props;
-  const [open, setOpen] = React.useState(false);
+  const { projectData, progressData, editFunction, deleteFunction, setProgressToggle, setProjectDataForProgress } = props;
+  const [open, setOpen] = useState(false);
 
   let statusCell;
-  if (row.status === "Completed") {
-    statusCell = <span className='text-white bg-green-500 py-2 px-2 rounded-lg'>{row.status}</span>;
-  } else if (row.status === "In Progress") {
-    statusCell = <span className='text-white bg-amber-500 py-2 px-2 rounded-lg'>{row.status}</span>;
+  if (projectData.status === "Completed") {
+    statusCell = <span className='text-white bg-green-500 py-2 px-2 rounded-lg'>{projectData.status}</span>;
+  } else if (projectData.status === "In Progress") {
+    statusCell = <span className='text-white bg-amber-500 py-2 px-2 rounded-lg'>{projectData.status}</span>;
   } else {
-    statusCell = <span className='text-white bg-red-500 py-2 px-2 rounded-lg'>{row.status}</span>;
+    statusCell = <span className='text-white bg-red-500 py-2 px-2 rounded-lg'>{projectData.status}</span>;
   }
+
+  const addProgress = (projectData: ProjectDataType) => {
+    setProgressToggle(true);
+    setProjectDataForProgress(projectData);
+  }
+
+  
 
   return (
     <React.Fragment>
@@ -64,18 +68,18 @@ const Projects: React.FC<ProjectsProps> = (props) => {
           </IconButton>
         </TableCell>
         <TableCell component="th" scope="row">
-          {row.project_name}
+          {projectData.project_name}
         </TableCell>
-        <TableCell align="center">{row.no_of_members}</TableCell>
-        <TableCell align="center">{row.deadline}</TableCell>
+        <TableCell align="center">{projectData.no_of_members}</TableCell>
+        <TableCell align="center">{projectData.deadline}</TableCell>
         <TableCell align="center">{statusCell}</TableCell>
         <TableCell align="center">
           <div className='flex justify-center'>
             <div className='cursor-pointer text-green-600 mr-2'>
-              <EditIcon onClick={() => editFunction(row)} />
+              <EditIcon onClick={() => editFunction(projectData)} />
             </div>
             <div className='cursor-pointer text-orange-600'>
-              <DeleteIcon onClick={() => deleteFunction(row)} />
+              <DeleteIcon onClick={() => deleteFunction(projectData)} />
             </div>
           </div>
         </TableCell>
@@ -90,7 +94,7 @@ const Projects: React.FC<ProjectsProps> = (props) => {
                     <p>Progress</p>
                   </div>
                   <div className="Add ml-2">
-                    <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
+                    <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addProgress(projectData)}>
                       Add Progress
                     </Button>
                   </div>
@@ -99,23 +103,27 @@ const Projects: React.FC<ProjectsProps> = (props) => {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell className='font-bold'>Date</TableCell>
-                    <TableCell className='font-bold'>Updates</TableCell>
-                    <TableCell align="center" className='font-bold'>Requirements</TableCell>
-                    <TableCell align="center" className='font-bold'>Next Procedure</TableCell>
+                    <TableCell><p className='font-bold'>Date</p> </TableCell>
+                    <TableCell><p className='font-bold'>Updates</p> </TableCell>
+                    <TableCell align="center"><p className='font-bold'>Requirements</p> </TableCell>
+                    <TableCell align="center"><p className='font-bold'>Next Procedure</p> </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  <TableRow key={row.date}>
-                    <TableCell component="th" scope="row">
-                      {row.date}
-                    </TableCell>
-                    <TableCell>{row.updates}</TableCell>
-                    <TableCell align="center">{row.requirements}</TableCell>
-                    <TableCell align="center">
-                      {row.future_plans}
-                    </TableCell>
-                  </TableRow>
+                  {progressData
+                    .filter(progress => progress.project_id === projectData.id)
+                    .map((progressData) => (
+                      <TableRow key={progressData.date}>
+                        <TableCell component="th" scope="row">
+                          {progressData.date}
+                        </TableCell>
+                        <TableCell>{progressData.updates}</TableCell>
+                        <TableCell align="center">{progressData.requirements}</TableCell>
+                        <TableCell align="center">
+                          {progressData.future_plans}
+                        </TableCell>
+                      </TableRow>
+                    ))}
                 </TableBody>
               </Table>
             </Box>
@@ -126,8 +134,9 @@ const Projects: React.FC<ProjectsProps> = (props) => {
   );
 };
 
-const ProjectsTable = () => {
+const ProjectsTable: React.FC = () => {
   const [projectsData, setProjectsData] = useState<ProjectDataType[]>([]);
+  const [progressData, setProgresssData] = useState<ProgressDataType[]>([]);
   const [copyData, setCopyData] = useState<ProjectDataType[]>([]);
   const [addProjectStatus, setAddProjectStatus] = useState(false);
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -144,6 +153,16 @@ const ProjectsTable = () => {
       .catch(err => {
         console.log("Error ", err);
       })
+
+    axios.get("http://127.0.0.1:8000/api/progress/")
+      .then(response => {
+        const fetchedData = response.data;
+        const sortedData = fetchedData.sort((a: ProgressDataType, b: ProgressDataType) => new Date(b.date).getTime() - new Date(a.date).getTime());
+        setProgresssData(sortedData);
+      })
+      .catch(err => {
+        console.log("Error ", err);
+      })
   }
 
   useEffect(() => {
@@ -155,6 +174,7 @@ const ProjectsTable = () => {
   }, [searchQuery, copyData]);
 
   const handleProjects = () => {
+    window.location.reload();
     setAddProjectStatus(false);
   }
 
@@ -187,7 +207,8 @@ const ProjectsTable = () => {
   const deleteRow = async (data: ProjectDataType) => {
     let id = data.id;
 
-    axios.delete(`http://127.0.0.1:8000/api/projects/${id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/projects/${id}/`),
+    axios.delete(`http://127.0.0.1:8000/api/progress/project/${id}/`)
       .then(response => {
         toast('Deleted Successfully !', {
           position: "top-right",
@@ -228,47 +249,60 @@ const ProjectsTable = () => {
     }
   };
 
+  const [progressToggle, setProgressToggle] = useState(false);
+  const handleProgressToggle = () => {
+    setProgressToggle(false);
+  }
+
+  const [projectDataForProgress, setProjectDataForProgress] = useState<ProjectDataType | null>(null);
+
   return (
     <>
       {addProjectStatus ? (
         <AddProjects handleProjectsToogle={handleProjects} data={rows || {}} />
       ) : (
         <>
-          <ToastContainer />
-          <h2 className='font-bold mb-4'>Projects</h2>
-          <div className="flex justify-between mb-2">
-            <div>
-              <input
-                type="text"
-                placeholder='search vacancies'
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className='mb-2 px-2 py-2 border-rounded'
-              />
-            </div>
-            <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
-              Add Project
-            </Button>
-          </div>
-          <TableContainer component={Paper}>
-            <Table aria-label="collapsible table">
-              <TableHead>
-                <TableRow>
-                  <TableCell />
-                  <TableCell className='font-bold'>Projects Name</TableCell>
-                  <TableCell align="center" className='font-bold'>Num Of Team</TableCell>
-                  <TableCell align="center" className='font-bold'>Deadline</TableCell>
-                  <TableCell align="center" className='font-bold'>Status</TableCell>
-                  <TableCell align="center" className='font-bold'>Action</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {projectsData.map((row) => (
-                  <Projects key={row.id} row={row} editFunction={editFunction} deleteFunction={deleteFunction} />
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          {progressToggle ? (
+            <AddProgress handleProgressToggle={handleProgressToggle} projectDataForProgress={projectDataForProgress} />
+          ) : (
+            <>
+              <ToastContainer />
+              <h2 className='font-bold mb-4'>Projects</h2>
+              <div className="flex justify-between mb-2">
+                <div>
+                  <input
+                    type="text"
+                    placeholder='search vacancies'
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className='mb-2 px-2 py-2 border-rounded'
+                  />
+                </div>
+                <Button variant="outlined" endIcon={<ControlPointIcon />} onClick={addFunction}>
+                  Add Project
+                </Button>
+              </div>
+              <TableContainer component={Paper}>
+                <Table aria-label="collapsible table">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell />
+                      <TableCell className='font-bold'>Projects Name</TableCell>
+                      <TableCell align="center" className='font-bold'>Num Of Team</TableCell>
+                      <TableCell align="center" className='font-bold'>Deadline</TableCell>
+                      <TableCell align="center" className='font-bold'>Status</TableCell>
+                      <TableCell align="center" className='font-bold'>Action</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {projectsData.map((row) => (
+                      <Projects key={row.id} projectData={row} progressData={progressData} editFunction={editFunction} deleteFunction={deleteFunction} setProgressToggle={setProgressToggle} setProjectDataForProgress={setProjectDataForProgress} />
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </>
+          )}
         </>
       )}
     </>

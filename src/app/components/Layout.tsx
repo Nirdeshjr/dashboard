@@ -55,6 +55,14 @@ export default function Layout(props: Props) {
   const router = useRouter();
   const path = usePathname();
 
+  //local storage
+  const data=localStorage.getItem("Admin data");
+  console.log(data);
+  if(!data){
+    router.push("/signup")
+  }
+
+
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -79,6 +87,7 @@ export default function Layout(props: Props) {
 
   //logout
   const handleLogout = () => {
+    localStorage.clear();
     router.push('/signup')
   }
 

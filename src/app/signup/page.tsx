@@ -48,6 +48,7 @@ const Login = () => {
   const userVerification = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (uname === adminData.username && pass === adminData.password) {
+      localStorage.setItem("Admin data", JSON.stringify(adminData));
       router.push("/dashboard");
     }
     else {
