@@ -8,52 +8,65 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import AddProducts from './addProducts';
+import AddGallery from './addGallery';
 import axios from 'axios';
-import { Product } from '@/types/product';
+import { Gallery } from '@/types/gallery';
 
-const Products = () => {
-    const [addProductsToogle, setAddProductsToogle] = useState(false);
-    const [prodcutData, setProductData] = useState<Product[]>([]);
+const GalleryPage = () => {
+    const [addGalleryToggle, setAddGalleryToggle] = useState(false);
+    const [galleryData, setGalleryData] = useState<Gallery[]>([]);
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
-    const [rows, setRows] = useState<Product | null>(null);
-    const [copyData, setCopyData] = useState<Product[]>([]);
+    const [rows, setRows] = useState<Gallery | null>(null);
+    const [copyData, setCopyData] = useState<Gallery[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
 
     const handleChange = () => {
-        setAddProductsToogle(false);
+        setAddGalleryToggle(false);
     }
 
     const getData = () => {
-        axios.get("http://127.0.0.1:8000/api/product/")
+        axios.get("http://127.0.0.1:8000/api/gallery/")
             .then(response => {
                 const fetchData = response.data;
-                setProductData(fetchData);
+                setGalleryData(fetchData);
                 setCopyData(fetchData);
             })
+            .catch(error => {
+                toast.error("Failed to fetch data!", {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            });
     }
 
     useEffect(() => {
         getData();
-    }, [addProductsToogle]);
+    }, [addGalleryToggle]);
 
     const toggleDropdown = (id: number) => {
         setDropdownOpenIndex(dropdownOpenIndex === id ? null : id);
     };
 
     const addFunction = () => {
-        setAddProductsToogle(true);
+        setAddGalleryToggle(true);
         setRows("");
         setDropdownOpenIndex(null);
     }
 
-    const editFunction = (data: Product) => {
-        setAddProductsToogle(true);
+    const editFunction = (data: Gallery) => {
+        setAddGalleryToggle(true);
         setDropdownOpenIndex(null);
         setRows(data);
     }
 
-    const deleteFunction = (data: Product) => {
+    const deleteFunction = (data: Gallery) => {
         confirmAlert({
             title: 'Confirm to submit',
             message: 'Are you sure you want to delete this data?',
@@ -70,10 +83,10 @@ const Products = () => {
         setDropdownOpenIndex(null);
     }
 
-    const deleteRow = async (data: Product) => {
+    const deleteRow = async (data: Gallery) => {
         let id = data.id;
 
-        axios.delete(`http://127.0.0.1:8000/api/product/${id}/`)
+        axios.delete(`http://127.0.0.1:8000/api/gallery/${id}/`)
             .then(response => {
                 toast('Deleted Successfully!', {
                     position: "top-right",
@@ -89,7 +102,7 @@ const Products = () => {
                 getData();
             })
             .catch(error => {
-                toast.error(error.message, {
+                toast.error("Deletion Failed!", {
                     position: "top-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -104,44 +117,42 @@ const Products = () => {
     }
 
     const searchData = (searchQuery: string) => {
-        let filterData: Product[] = prodcutData ;
+        let filterData: Gallery[] = galleryData;
         if (searchQuery) {
-            filterData = prodcutData.filter(product =>
-                product.name.toLowerCase().includes(searchQuery.toLowerCase())
-            )
-            setProductData(filterData);
-        }
-        else {
-            setProductData(copyData);
+            filterData = galleryData.filter(gallery =>
+                gallery.name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+            setGalleryData(filterData);
+        } else {
+            setGalleryData(copyData);
         }
     }
 
-    
     useEffect(() => {
         searchData(searchQuery);
-    }, [searchQuery])
+    }, [searchQuery]);
 
     return (
         <>
-            {addProductsToogle ? (
-                <AddProducts handleChangeToogle={handleChange} data={rows} />
+            {addGalleryToggle ? (
+                <AddGallery handleChangeToogle={handleChange} data={rows} />
             ) : (
                 <>
-                    <h2 className='font-bold mb-4'>Our Products</h2>
+                    <h2 className='font-bold mb-4'>Our Gallery</h2>
                     <div className="flex justify-between">
                         <input
                             type="text"
-                            placeholder='Search Products'
+                            placeholder='Search Gallery'
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className='mb-2 px-2 py-2 border-rounded'
                         />
                         <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
-                            Add Products
+                            Add Gallery
                         </Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                        {prodcutData.map((product, index) => (
+                        {galleryData.map((gallery, index) => (
                             <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow relative" key={index}>
                                 <div className="relative">
                                     <button
@@ -161,25 +172,25 @@ const Products = () => {
                                     >
                                         <ul className="py-2" aria-labelledby="dropdownButton">
                                             <li>
-                                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => editFunction(product)}>Edit</a>
+                                                <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" onClick={() => editFunction(gallery)}>Edit</a>
                                             </li>
                                             <li>
-                                                <a href="#" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onClick={() => deleteFunction(product)}>Delete</a>
+                                                <a href="#" className="block px-4 py-2 text-sm text-red-600 hover:bg-gray-100" onClick={() => deleteFunction(gallery)}>Delete</a>
                                             </li>
                                         </ul>
                                     </div>
                                     <Image
                                         className="w-full h-40 object-cover mb-3 rounded-t-lg"
-                                        src={product.product_image || "/Images/course.png"}
-                                        alt="Bonnie image"
+                                        src={gallery.image || "/Images/course.png"}
+                                        alt="Gallery image"
                                         width={90}
                                         height={70}
                                     />
                                 </div>
                                 <div className="flex flex-col items-left pb-10 bg-gray-100 pt-4 px-4">
-                                    <h5 className="mb-1 text-xl font-medium text-gray-900">{product.name}</h5>
-                                    <span className="text-sm text-gray-700 font-medium mb-1">{product.title}</span>
-                                    <span className="text-sm text-gray-500">{product.text}</span>
+                                    <h5 className="mb-1 text-xl font-medium text-gray-900">{gallery.name}</h5>
+                                    <span className="text-sm text-gray-700 font-medium mb-1">{gallery.title}</span>
+                                    <span className="text-sm text-gray-500">{gallery.text}</span>
                                 </div>
                             </div>
                         ))}
@@ -191,4 +202,5 @@ const Products = () => {
     );
 };
 
-export default Products;
+export default GalleryPage;
+
