@@ -29,9 +29,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import InboxIcon from '@mui/icons-material/Inbox';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import CollectionsIcon from '@mui/icons-material/Collections';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
+import CollectionsIcon from '@mui/icons-material/Collections';
 
 
 import Image from 'next/image';
@@ -90,7 +90,7 @@ export default function Layout(props: Props) {
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile'].map((text, index) => (
+        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile','Gallery'].map((text, index) => (
           <ListItem key={text} disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
@@ -107,6 +107,7 @@ export default function Layout(props: Props) {
                 {index === 5 && <NoteAltIcon />}
                 {index === 6 && <BusinessCenterIcon />}
                 {index === 7 && <PersonIcon />}
+                {index === 8 && <CollectionsIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
