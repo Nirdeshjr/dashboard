@@ -8,7 +8,7 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import AddGallery from './addGallery';
+import AddGallery from './addgallery';
 import axios from 'axios';
 import { Gallery } from '@/types/gallery';
 
