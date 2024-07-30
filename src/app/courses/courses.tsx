@@ -1,4 +1,4 @@
-"use client";
+// src/app/courses/courses.tsx
 
 import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
@@ -144,7 +144,7 @@ const Courses = () => {
     return (
         <>
             {addCourse ? (
-                <AddCourse handleTooglePage={handleToggle} rows={rows} />
+                <AddCourse handleTogglePage={handleToggle} rows={rows} />
             ) : (
                 <>
                     <h2 className='font-bold mb-4'>Courses</h2>
