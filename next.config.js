@@ -1,3 +1,5 @@
+const path = require('path');
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     env: {
@@ -14,7 +16,7 @@ const nextConfig = {
         if (!isServer) {
             config.cache = {
                 type: 'filesystem',
-                cacheDirectory: '.next/cache',
+                cacheDirectory: path.resolve(__dirname, '.next/cache'),
                 buildDependencies: {
                     config: [__filename]
                 }
@@ -24,7 +26,7 @@ const nextConfig = {
     }
 };
 
-// Use CommonJS export syntax
 module.exports = nextConfig;
+
 
 
