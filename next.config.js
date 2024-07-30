@@ -10,7 +10,7 @@ const nextConfig = {
     images: {
         domains: ['127.0.0.1'],
     },
-    webpack: (config, { isServer }) => {
+    webpack(config, { isServer }) {
         if (!isServer) {
             config.cache = {
                 type: 'filesystem',
@@ -24,5 +24,7 @@ const nextConfig = {
     }
 };
 
-export default nextConfig;
+// Use CommonJS export syntax
+module.exports = nextConfig;
+
 
