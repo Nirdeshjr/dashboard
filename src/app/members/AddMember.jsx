@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";
 
@@ -6,23 +6,34 @@ import axios from "axios";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-//ckeditor
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
-
 const AddMember = ({ handleAddSection, rows }) => {
   const [formData, setFormData] = useState({
-    id: rows.id ,
-    member_name: rows.member_name ,
-    position: rows.position ,
-    salary: rows.salary ,
-    status: rows.status ,
-    phone: rows.phone ,
+    id: rows.id,
+    member_name: rows.member_name,
+    position: rows.position,
+    salary: rows.salary,
+    status: rows.status,
+    phone: rows.phone,
     working_days: rows.working_days,
     member_profile: null,
-    description: rows.description ,
+    description: rows.description,
   });
+
+  const [CKEditor, setCKEditor] = useState(null);
+  const [ClassicEditor, setClassicEditor] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      import("@ckeditor/ckeditor5-react")
+        .then(module => {
+          setCKEditor(module.CKEditor);
+        });
+      import("@ckeditor/ckeditor5-build-classic")
+        .then(module => {
+          setClassicEditor(module.default);
+        });
+    }
+  }, []);
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -96,7 +107,6 @@ const AddMember = ({ handleAddSection, rows }) => {
       });
     }
   };
-  
 
   return (
     <>
@@ -227,17 +237,21 @@ const AddMember = ({ handleAddSection, rows }) => {
             Description <span className="text-red-500">*</span>
           </label>
           <br />
-          <CKEditor
-            editor={ClassicEditor}
-            onInit={(editor) => {}}
-            onChange={(event, editor) => {
-              const data = editor.getData();
-              setFormData({
-                ...formData,
-                description: data,
-              });
-            }}
-          />
+          {CKEditor && ClassicEditor ? (
+            <CKEditor
+              editor={ClassicEditor}
+              data={formData.description}
+              onChange={(event, editor) => {
+                const data = editor.getData();
+                setFormData({
+                  ...formData,
+                  description: data,
+                });
+              }}
+            />
+          ) : (
+            <div>Loading editor...</div>
+          )}
         </div>
         <div className="flex justify-end p-1">
           <button className="p-3 bg-blue-500 text-white hover:bg-blue-400">

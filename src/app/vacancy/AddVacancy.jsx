@@ -1,10 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-//ckeditor
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
-//for tostify success after insert items
+//for toastify success after insert items
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -13,7 +9,6 @@ import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const AddVacancy = ({ handleAddVacancy, rows }) => {
-    //taking inputs and setting the variables
     const [formData, setFormData] = useState({
         id: rows.id,
         job_title: rows.job_title,
@@ -24,15 +19,31 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
         deadline: rows.deadline,
         no_of_hiring: rows.no_of_hiring,
         description: rows.description,
-        vacancy_image: null, // Initialize as null to store the file object
+        vacancy_image: null,
     });
+
+    const [CKEditor, setCKEditor] = useState(null);
+    const [ClassicEditor, setClassicEditor] = useState(null);
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            import("@ckeditor/ckeditor5-react")
+                .then(module => {
+                    setCKEditor(module.CKEditor);
+                });
+            import("@ckeditor/ckeditor5-build-classic")
+                .then(module => {
+                    setClassicEditor(module.default);
+                });
+        }
+    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === 'vacancy_img') {
             setFormData({
                 ...formData,
-                vacancy_image: files[0], // Store the file object
+                vacancy_image: files[0],
             });
         } else {
             setFormData({
@@ -42,7 +53,6 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
         }
     };
 
-    //on submit vacancy if rows exist it is edit else add
     const submitVacancy = async (e) => {
         e.preventDefault();
 
@@ -229,16 +239,18 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
                         Description <span className="text-red-500">*</span>
                     </label>
                     <br />
-                    <CKEditor
-                        editor={ClassicEditor}
-                        onInit={(editor) => {
-                        }}
-                        data={formData.description}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            setFormData({ ...formData, description: data });
-                        }}
-                    />
+                    {CKEditor && ClassicEditor ? (
+                        <CKEditor
+                            editor={ClassicEditor}
+                            data={formData.description}
+                            onChange={(event, editor) => {
+                                const data = editor.getData();
+                                setFormData({ ...formData, description: data });
+                            }}
+                        />
+                    ) : (
+                        <div>Loading editor...</div>
+                    )}
                 </div>
                 <div className="flex p-1 justify-end">
                     <button
