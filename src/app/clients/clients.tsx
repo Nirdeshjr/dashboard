@@ -16,49 +16,61 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 //component
 import AddClients from './addClients';
 
-//client data tyoe
+//client data type
 import { Client } from '@/types/client';
 import axios from 'axios';
 
-
 const Clients = () => {
-    //toogle
+    // Toggle
     const [addClientsToogle, setAddClientsToogle] = useState(false);
     const handleChange = () => {
         setAddClientsToogle(false);
     }
 
-    //data
+    // Data
     const [clientsDetail, setClientsDetail] = useState<Client[]>([]);
+    const [copyData, setCopyData] = useState<Client[]>([]);
+    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    useEffect(() => {
+        getData();
+    }, [addClientsToogle]);
 
     const getData = () => {
         axios.get("https://backend-4c5c.onrender.com/api/client/")
             .then(response => {
                 const fetchData = response.data;
                 setClientsDetail(fetchData);
-                setCopyData(response.data)
+                setCopyData(fetchData);
             })
     }
 
     useEffect(() => {
-        getData();
-    }, [addClientsToogle]);
+        searchData(searchQuery);
+    }, [searchQuery]);
 
+    const searchData = (searchQuery: string) => {
+        let filterData: Client[] = copyData;
+        if (searchQuery) {
+            filterData = copyData.filter(client =>
+                client.client_name.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+        setClientsDetail(filterData);
+    }
 
-    //toogle edit and delete
+    // Toggle edit and delete
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
-
     const toggleDropdown = (id: number) => {
         setDropdownOpenIndex(dropdownOpenIndex === id ? null : id);
     };
 
-
-    //add function 
-    const [rows, setRows] = useState<Client>();
+    // Add function
+    const [rows, setRows] = useState<Client | undefined>(undefined);
 
     const addFunction = () => {
         setAddClientsToogle(true);
-        setRows("");
+        setRows(undefined); // Reset the state to undefined
         setDropdownOpenIndex(null);
     }
 
@@ -118,27 +130,6 @@ const Clients = () => {
             });
     }
 
-    //for search function 
-    const [copyData, setCopyData] = useState<Client[]>([]);//copying to use later in the filtering process
-    const [searchQuery, setSearchQuery] = useState<string>('');
-
-    useEffect(() => {
-        searchData(searchQuery);
-    }, [searchQuery])
-
-    const searchData = (searchQuery: string) => {
-        let filterData: Client[] = clientsDetail;
-        if (searchQuery) {
-            filterData = clientsDetail.filter(client =>
-                client.client_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
-            )
-            setClientsDetail(filterData);
-        }
-        else {
-            setClientsDetail(copyData);
-        }
-    }
-
     return (
         <>
             {addClientsToogle ? (
@@ -189,7 +180,7 @@ const Clients = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center pb-10">
-                                    <Image className="w-24 h-24 mb-3 rounded-full shadow-lg" src={client.client_image || "/Images/course.png"} alt="Bonnie image" width={90} height={70} />
+                                    <Image className="w-24 h-24 mb-3 rounded-full shadow-lg" src={client.client_image || "/Images/course.png"} alt="Client image" width={90} height={70} />
                                     <h5 className="mb-1 text-xl font-medium text-gray-900">{client.client_name}</h5>
                                     <span className="text-sm text-gray-500 ">{client.review}</span>
                                     <div className="flex mt-4 md:mt-6">
@@ -202,7 +193,7 @@ const Clients = () => {
                     </div>
                 </>
             )}
-
+            <ToastContainer />
         </>
     );
 };

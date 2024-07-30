@@ -61,9 +61,9 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
             let response;
             if (rows) {
                 const id = formData.id;
-                response = await axios.put(`http://127.0.0.1:8000/api/vacancies/${id}/`, formDataToSend);
+                response = await axios.put(`https://backend-4c5c.onrender.com/api/vacancies/${id}/`, formDataToSend);
             } else {
-                response = await axios.post("http://127.0.0.1:8000/api/vacancy/", formDataToSend);
+                response = await axios.post("https://backend-4c5c.onrender.com/api/vacancy/", formDataToSend);
             }
 
             toast('Submitted Successfully!', {

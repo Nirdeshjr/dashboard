@@ -31,6 +31,19 @@ const Products = () => {
                 setProductData(fetchData);
                 setCopyData(fetchData);
             })
+            .catch(error => {
+                toast.error('Failed to fetch data', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            });
     }
 
     useEffect(() => {
@@ -43,7 +56,7 @@ const Products = () => {
 
     const addFunction = () => {
         setAddProductsToogle(true);
-        setRows("");
+        setRows(null); // Change from "" to null
         setDropdownOpenIndex(null);
     }
 
@@ -104,11 +117,11 @@ const Products = () => {
     }
 
     const searchData = (searchQuery: string) => {
-        let filterData: Product[] = prodcutData ;
+        let filterData: Product[] = prodcutData;
         if (searchQuery) {
             filterData = prodcutData.filter(product =>
                 product.name.toLowerCase().includes(searchQuery.toLowerCase())
-            )
+            );
             setProductData(filterData);
         }
         else {
@@ -116,10 +129,9 @@ const Products = () => {
         }
     }
 
-    
     useEffect(() => {
         searchData(searchQuery);
-    }, [searchQuery])
+    }, [searchQuery]);
 
     return (
         <>
@@ -171,7 +183,7 @@ const Products = () => {
                                     <Image
                                         className="w-full h-40 object-cover mb-3 rounded-t-lg"
                                         src={product.product_image || "/Images/course.png"}
-                                        alt="Bonnie image"
+                                        alt="Product image"
                                         width={90}
                                         height={70}
                                     />
@@ -192,3 +204,4 @@ const Products = () => {
 };
 
 export default Products;
+

@@ -77,7 +77,7 @@ export default function MemberList() {
   //add function
   const addFunction = () => {
     setAddUser(true);
-    setRows("")
+    setRows(undefined)
   }
 
   //edit fucntion
