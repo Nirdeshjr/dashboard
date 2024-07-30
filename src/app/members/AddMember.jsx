@@ -59,12 +59,12 @@ const AddMember = ({ handleAddSection, rows }) => {
       if (rows) {
         const id = formData.id;
         response = await axios.put(
-          `http://127.0.0.1:8000/api/member/${id}/`,
+          `https://backend-4c5c.onrender.com/api/member/${id}/`,
           formDataToSend
         );
       } else {
         response = await axios.post(
-          "http://127.0.0.1:8000/api/member/",
+          "https://backend-4c5c.onrender.com/api/member/",
           formDataToSend
         );
       }

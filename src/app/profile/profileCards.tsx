@@ -24,7 +24,7 @@ const ProfileCards = () => {
   // Fetch API data
   const getData = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/dashboard/");
+      const response = await axios.get("https://backend-4c5c.onrender.com/api/dashboard/");
       const profileDataFetched = response.data[0];
       setAdminData(profileDataFetched);
     } catch (error) {

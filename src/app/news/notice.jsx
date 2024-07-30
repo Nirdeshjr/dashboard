@@ -12,7 +12,7 @@ const Notice = () => {
 
   const fetchNotice = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/api/notice/");
+      const response = await axios.get("https://backend-4c5c.onrender.com/api/notice/");
       setNotice(response.data);
     } catch (error) {
       console.error("Error fetching notices:", error);
@@ -35,7 +35,7 @@ const Notice = () => {
       formDataToSend.append("message", formData.message);
       formDataToSend.append("notice_image", formData.notice_image);
 
-      const response = await axios.post("http://127.0.0.1:8000/api/notice/", formDataToSend);
+      const response = await axios.post("https://backend-4c5c.onrender.com/api/notice/", formDataToSend);
       console.log("Response from API:", response.data);
       setFormData({ message: "", notice_image: null });
       fetchNotice(); // Fetch the updated list of notices after successful submission
@@ -47,7 +47,7 @@ const Notice = () => {
   const handleDelete = async (id) => {
     try {
         console.log("Deleting notice with ID:", id);
-        await axios.delete(`http://127.0.0.1:8000/api/notice/${id}/`);
+        await axios.delete(`https://backend-4c5c.onrender.com/api/notice/${id}/`);
       fetchNotice(); // Fetch the updated list of notices after successful deletion
     } catch (error) {
       console.error("Error deleting notice:", error);

@@ -16,7 +16,7 @@ const Inbox = () => {
 
   const fetchMessage = async () => {
     try {
-      const response = await axios.get('http://127.0.0.1:8000/api/support/');
+      const response = await axios.get('https://backend-4c5c.onrender.com/api/support/');
       setMessage(response.data);
       setCopyData(response.data);
     } catch (error) {
@@ -27,7 +27,7 @@ const Inbox = () => {
   const handleDelete = async (id) => {
     console.log(id)
     try {
-      await axios.delete(`http://127.0.0.1:8000/api/support/${id}/`);
+      await axios.delete(`https://backend-4c5c.onrender.com/api/support/${id}/`);
       fetchMessage();
     } catch (error) {
       console.error("Error while deleting message:", error);

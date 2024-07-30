@@ -32,7 +32,7 @@ const Clients = () => {
     const [clientsDetail, setClientsDetail] = useState<Client[]>([]);
 
     const getData = () => {
-        axios.get("http://127.0.0.1:8000/api/client/")
+        axios.get("https://backend-4c5c.onrender.com/api/client/")
             .then(response => {
                 const fetchData = response.data;
                 setClientsDetail(fetchData);
@@ -88,7 +88,7 @@ const Clients = () => {
     const deleteRow = async (data: Client) => {
         let id = data.id;
 
-        axios.delete(`http://127.0.0.1:8000/api/client/${id}/`)
+        axios.delete(`https://backend-4c5c.onrender.com/api/client/${id}/`)
             .then(response => {
                 toast('Deleted Successfully !', {
                     position: "top-right",

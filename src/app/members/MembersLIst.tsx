@@ -58,7 +58,7 @@ export default function MemberList() {
 
 
   const getData = () => {
-    axios.get("http://127.0.0.1:8000/api/member/")
+    axios.get("https://backend-4c5c.onrender.com/api/member/")
       .then(response => {
         const fetchedData = response.data;
         const sortedData = fetchedData.sort((a: Members, b: Members) => a.member_name.localeCompare(b.member_name));
@@ -108,7 +108,7 @@ export default function MemberList() {
   const deleteRow = async (data: Members) => {
     let id = data.id;
 
-    axios.delete(`http://127.0.0.1:8000/api/member/${id}/`)
+    axios.delete(`https://backend-4c5c.onrender.com/api/member/${id}/`)
       .then(response => {
         toast('Deleted Successfully !', {
           position: "top-right",

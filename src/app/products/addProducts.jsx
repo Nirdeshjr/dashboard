@@ -44,13 +44,13 @@ const AddProducts = ({ handleChangeToogle, data }) => {
             let response;
             if (formData.id) {
                 const id = formData.id;
-                response = await axios.put(`http://127.0.0.1:8000/api/product/${id}/`, projectData, {
+                response = await axios.put(`https://backend-4c5c.onrender.com/api/product/${id}/`, projectData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
             } else {
-                response = await axios.post("http://127.0.0.1:8000/api/product/", projectData, {
+                response = await axios.post("https://backend-4c5c.onrender.com/api/product/", projectData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },

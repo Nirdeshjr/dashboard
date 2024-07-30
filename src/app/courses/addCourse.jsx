@@ -61,12 +61,12 @@ const AddCourse = ({ handleTooglePage, rows }) => {
       if (rows) {
         const id = formData.id;
         response = await axios.put(
-          `http://127.0.0.1:8000/api/course/${id}/`,
+          `https://backend-4c5c.onrender.com/api/course/${id}/`,
           formDataToSend
         );
       } else {
         response = await axios.post(
-          "http://127.0.0.1:8000/api/course/",
+          "https://backend-4c5c.onrender.com/api/course/",
           formDataToSend
         );
       }

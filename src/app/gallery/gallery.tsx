@@ -25,7 +25,7 @@ const GalleryPage = () => {
     }
 
     const getData = () => {
-        axios.get("http://127.0.0.1:8000/api/gallery/")
+        axios.get("https://backend-4c5c.onrender.com/api/gallery/")
             .then(response => {
                 const fetchData = response.data;
                 setGalleryData(fetchData);
@@ -86,7 +86,7 @@ const GalleryPage = () => {
     const deleteRow = async (data: Gallery) => {
         let id = data.id;
 
-        axios.delete(`http://127.0.0.1:8000/api/gallery/${id}/`)
+        axios.delete(`https://backend-4c5c.onrender.com/api/gallery/${id}/`)
             .then(response => {
                 toast('Deleted Successfully!', {
                     position: "top-right",

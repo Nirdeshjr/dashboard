@@ -25,7 +25,7 @@ const Products = () => {
     }
 
     const getData = () => {
-        axios.get("http://127.0.0.1:8000/api/product/")
+        axios.get("https://backend-4c5c.onrender.com/api/product/")
             .then(response => {
                 const fetchData = response.data;
                 setProductData(fetchData);
@@ -73,7 +73,7 @@ const Products = () => {
     const deleteRow = async (data: Product) => {
         let id = data.id;
 
-        axios.delete(`http://127.0.0.1:8000/api/product/${id}/`)
+        axios.delete(`https://backend-4c5c.onrender.com/api/product/${id}/`)
             .then(response => {
                 toast('Deleted Successfully!', {
                     position: "top-right",

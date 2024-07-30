@@ -25,7 +25,7 @@ const Courses = () => {
     const [courseDeatil, setCoursesDetail] = useState<Course[]>([]);
 
     const getData = () => {
-        axios.get("http://127.0.0.1:8000/api/course/")
+        axios.get("https://backend-4c5c.onrender.com/api/course/")
             .then(response => {
                 const fetchData = response.data;
                 setCoursesDetail(fetchData);
@@ -91,7 +91,7 @@ const Courses = () => {
     const deleteRow = async (data: Course) => {
         let id = data.id;
 
-        axios.delete(`http://127.0.0.1:8000/api/course/${id}/`)
+        axios.delete(`https://backend-4c5c.onrender.com/api/course/${id}/`)
             .then(response => {
                 toast('Deleted Successfully !', {
                     position: "top-right",
