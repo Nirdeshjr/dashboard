@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import axios from "axios";

@@ -1,3 +1,4 @@
+" use client"
 import ProfileCards from './profileCards';
 import Layout from '../components/Layout';
 

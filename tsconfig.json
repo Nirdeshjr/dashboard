@@ -1,28 +1,26 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
-    "baseUrl": ".",
-    "paths": {
-			"@/*": ["./src/*"]
-		},
     "allowJs": true,
     "skipLibCheck": true,
-    "strict": false,
-    "forceConsistentCasingInFileNames": true,
+    "strict": true,
     "noEmit": true,
-    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
-    ]
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
-  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/components/AdminMembers/AddMember.jsx", "src/components/AdminGallery/addgallery.jsx", "src/components/AdminGallery/gallery.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/vacancy/AddVacancy.jsx", "src/app/vacancy/VacancyList.jsx", "src/app/dashboard/card.jsx", "src/app/dashboard/cardsData.js", "src/app/dashboard/Cards.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/Cards.jsx", "src/app/dashboard/cardsData.jsx", "src/app/profile/profileCards.tsx", "src/app/profile/editProfile.tsx", "src/app/courses/addCourse.jsx", "src/app/clients/addClients.jsx"],
   "exclude": ["node_modules"]
 }

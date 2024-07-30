@@ -56,7 +56,7 @@ const GalleryPage = () => {
 
     const addFunction = () => {
         setAddGalleryToggle(true);
-        setRows("");
+        setRows(null);
         setDropdownOpenIndex(null);
     }
 

@@ -141,7 +141,7 @@ const VacancyList = () => {
 
     const addFunction = () => {
         setAddVacancy(true);
-        setRows("");
+        setRows(undefined);
     };
 
     //for search function 

@@ -1,6 +1,5 @@
 "use client"
 
-
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import Paper from '@mui/material/Paper';
@@ -77,7 +76,7 @@ export default function MemberList() {
   //add function
   const addFunction = () => {
     setAddUser(true);
-    setRows("")
+    setRows(undefined);
   }
 
   //edit fucntion

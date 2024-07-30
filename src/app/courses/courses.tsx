@@ -58,7 +58,7 @@ const Courses = () => {
     const [rows, setRows] = useState<Course>();
     const addFunction = () => {
         setAddcourse(true);
-        setRows("");
+        setRows(undefined);
         setGetIDToogle(null);
     }
 

@@ -43,7 +43,7 @@ const Products = () => {
 
     const addFunction = () => {
         setAddProductsToogle(true);
-        setRows("");
+        setRows(null);
         setDropdownOpenIndex(null);
     }
 
