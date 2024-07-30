@@ -73,7 +73,7 @@ const VacancyList = () => {
 
 
     const getData = () => {
-        axios.get("https://backend-4c5c.onrender.com/api/vacancy/")
+        axios.get("http://127.0.0.1:8000/api/vacancy/")
             .then(response => {
                 const fetchedData = response.data;
                 const sortedData = fetchedData.sort((a: Vacancies, b: Vacancies) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
@@ -104,7 +104,7 @@ const VacancyList = () => {
     const deleteRow = async (data: Vacancies) => {
         let id = data.id;
 
-        axios.delete(`https://backend-4c5c.onrender.com/api/vacancies/${id}/`)
+        axios.delete(`http://127.0.0.1:8000/api/vacancies/${id}/`)
             .then(response => {
                 toast('Deleted Successfully !', {
                     position: "top-right",
@@ -141,7 +141,7 @@ const VacancyList = () => {
 
     const addFunction = () => {
         setAddVacancy(true);
-        setRows(undefined);
+        setRows("");
     };
 
     //for search function 

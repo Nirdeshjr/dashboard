@@ -1,6 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-//for toastify success after insert items
+//ckeditor
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
+//for tostify success after insert items
 import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -9,6 +13,7 @@ import axios from 'axios';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const AddVacancy = ({ handleAddVacancy, rows }) => {
+    //taking inputs and setting the variables
     const [formData, setFormData] = useState({
         id: rows.id,
         job_title: rows.job_title,
@@ -19,31 +24,15 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
         deadline: rows.deadline,
         no_of_hiring: rows.no_of_hiring,
         description: rows.description,
-        vacancy_image: null,
+        vacancy_image: null, // Initialize as null to store the file object
     });
-
-    const [CKEditor, setCKEditor] = useState(null);
-    const [ClassicEditor, setClassicEditor] = useState(null);
-
-    useEffect(() => {
-        if (typeof window !== 'undefined') {
-            import("@ckeditor/ckeditor5-react")
-                .then(module => {
-                    setCKEditor(module.CKEditor);
-                });
-            import("@ckeditor/ckeditor5-build-classic")
-                .then(module => {
-                    setClassicEditor(module.default);
-                });
-        }
-    }, []);
 
     const handleChange = (e) => {
         const { name, value, files } = e.target;
         if (name === 'vacancy_img') {
             setFormData({
                 ...formData,
-                vacancy_image: files[0],
+                vacancy_image: files[0], // Store the file object
             });
         } else {
             setFormData({
@@ -53,6 +42,7 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
         }
     };
 
+    //on submit vacancy if rows exist it is edit else add
     const submitVacancy = async (e) => {
         e.preventDefault();
 
@@ -71,9 +61,9 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
             let response;
             if (rows) {
                 const id = formData.id;
-                response = await axios.put(`https://backend-4c5c.onrender.com/api/vacancies/${id}/`, formDataToSend);
+                response = await axios.put(`http://127.0.0.1:8000/api/vacancies/${id}/`, formDataToSend);
             } else {
-                response = await axios.post("https://backend-4c5c.onrender.com/api/vacancy/", formDataToSend);
+                response = await axios.post("http://127.0.0.1:8000/api/vacancy/", formDataToSend);
             }
 
             toast('Submitted Successfully!', {
@@ -239,18 +229,16 @@ const AddVacancy = ({ handleAddVacancy, rows }) => {
                         Description <span className="text-red-500">*</span>
                     </label>
                     <br />
-                    {CKEditor && ClassicEditor ? (
-                        <CKEditor
-                            editor={ClassicEditor}
-                            data={formData.description}
-                            onChange={(event, editor) => {
-                                const data = editor.getData();
-                                setFormData({ ...formData, description: data });
-                            }}
-                        />
-                    ) : (
-                        <div>Loading editor...</div>
-                    )}
+                    <CKEditor
+                        editor={ClassicEditor}
+                        onInit={(editor) => {
+                        }}
+                        data={formData.description}
+                        onChange={(event, editor) => {
+                            const data = editor.getData();
+                            setFormData({ ...formData, description: data });
+                        }}
+                    />
                 </div>
                 <div className="flex p-1 justify-end">
                     <button

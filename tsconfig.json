@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": true,
+    "allowJs": false,
     "skipLibCheck": true,
     "strict": true,
     "noEmit": true,
@@ -21,6 +21,23 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/app/vacancy/AddVacancy.jsx", "src/app/vacancy/VacancyList.jsx", "src/app/dashboard/card.jsx", "src/app/dashboard/cardsData.js", "src/app/dashboard/Cards.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/page.jsx", "src/app/dashboard/dashboard.jsx", "src/app/dashboard/Cards.jsx", "src/app/dashboard/cardsData.jsx", "src/app/profile/profileCards.tsx", "src/app/profile/editProfile.tsx", "src/app/courses/addCourse.jsx", "src/app/clients/addClients.jsx"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    "src/app/vacancy/AddVacancy.tsx",
+    "src/app/vacancy/VacancyList.tsx",
+    "src/app/dashboard/card.tsx",
+    "src/app/dashboard/cardsData.ts",
+    "src/app/dashboard/Cards.tsx",
+    "src/app/dashboard/page.tsx",
+    "src/app/dashboard/dashboard.tsx",
+    "src/app/profile/profileCards.tsx",
+    "src/app/profile/editProfile.tsx",
+    "src/app/courses/addCourse.tsx",
+    "src/app/clients/addClients.tsx"
+  ],
   "exclude": ["node_modules"]
 }
+
