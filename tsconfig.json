@@ -26,6 +26,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
+    "custom.d.ts", // Add this line to include custom type declarations
     "src/app/vacancy/AddVacancy.tsx",
     "src/app/vacancy/VacancyList.tsx",
     "src/app/dashboard/card.tsx",
@@ -40,4 +41,5 @@
   ],
   "exclude": ["node_modules"]
 }
+
 
