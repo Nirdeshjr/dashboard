@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { ToastContainer, toast, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const AddCourse = ({ handleTogglePage, rows }) => {
   const [formData, setFormData] = useState({
@@ -20,15 +20,15 @@ const AddCourse = ({ handleTogglePage, rows }) => {
   const handleChange = (e) => {
     const { name, value, files } = e.target;
     if (files) {
-      setFormData({
-        ...formData,
+      setFormData((prevData) => ({
+        ...prevData,
         [name]: files[0],
-      });
+      }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevData) => ({
+        ...prevData,
         [name]: value,
-      });
+      }));
     }
   };
 
@@ -82,17 +82,31 @@ const AddCourse = ({ handleTogglePage, rows }) => {
         detail: "",
       });
     } catch (error) {
-      toast.error("Submission Failed!", {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "light",
-        transition: Bounce,
-      });
+      if (axios.isAxiosError(error)) {
+        toast.error(`Submission Failed! ${error.message}`, {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      } else {
+        toast.error('Submission Failed!', {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "light",
+          transition: Bounce,
+        });
+      }
     }
   };
 
@@ -115,7 +129,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="text"
-              className="border-2 border-gray-300 p-2 w-full double_input"
+              className="border-2 border-gray-300 p-2 w-full"
               name="course_name"
               id="course_name"
               value={formData.course_name}
@@ -130,7 +144,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="number"
-              className="border-2 border-gray-300 p-2 w-full double_input"
+              className="border-2 border-gray-300 p-2 w-full"
               name="duration"
               id="duration"
               value={formData.duration}
@@ -145,7 +159,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="text"
-              className="border-2 border-gray-300 p-2 w-full double_input"
+              className="border-2 border-gray-300 p-2 w-full"
               name="description"
               id="description"
               value={formData.description}
@@ -160,7 +174,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="file"
-              className="border-2 border-gray-300 p-2 w-full double_input"
+              className="border-2 border-gray-300 p-2 w-full"
               name="course_image"
               id="course_image"
               onChange={handleChange}
@@ -173,7 +187,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="file"
-              className="border-2 border-gray-300 p-2 w-full double_input"
+              className="border-2 border-gray-300 p-2 w-full"
               name="course_extra"
               id="course_extra"
               onChange={handleChange}
@@ -188,7 +202,6 @@ const AddCourse = ({ handleTogglePage, rows }) => {
           <CKEditor
             editor={ClassicEditor}
             data={formData.detail}
-            onInit={(editor) => {}}
             onChange={(event, editor) => {
               const data = editor.getData();
               setFormData({ ...formData, detail: data });
@@ -206,3 +219,4 @@ const AddCourse = ({ handleTogglePage, rows }) => {
 };
 
 export default AddCourse;
+

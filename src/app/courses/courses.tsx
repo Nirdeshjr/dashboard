@@ -1,13 +1,11 @@
-// src/app/courses/courses.tsx
-
 import React, { useEffect, useState } from 'react';
 import { Button } from '@mui/material';
 import ControlPointIcon from '@mui/icons-material/ControlPoint';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import Image from 'next/image';
 
 // Confirm alert
-import { confirmAlert } from 'react-confirm-alert'; // Import
+import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 // Toast
@@ -15,45 +13,39 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 // Components
-import AddCourse from './addCourse';
+import dynamic from 'next/dynamic';
+const AddCourse = dynamic(() => import('./addCourse'), { ssr: false });
 
 // Types
 import { Course } from '@/types/course';
 
 const Courses = () => {
-    // State for course details and search
     const [courseDetail, setCoursesDetail] = useState<Course[]>([]);
-    const [copyData, setCopyData] = useState<Course[]>([]); // Copy of data for search/filter
+    const [copyData, setCopyData] = useState<Course[]>([]);
     const [searchQuery, setSearchQuery] = useState<string>('');
-
-    // State for add course toggle
     const [addCourse, setAddCourse] = useState<boolean>(false);
-
-    // State for dropdown menu
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
-
-    // State for course to add/edit
     const [rows, setRows] = useState<Course | undefined>(undefined);
 
-    // Fetch data
-    const getData = () => {
-        axios.get("https://backend-4c5c.onrender.com/api/course/")
-            .then(response => {
-                const fetchData = response.data;
-                setCoursesDetail(fetchData);
-                setCopyData(fetchData);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }
+    const getData = async () => {
+        try {
+            const response = await axios.get("https://backend-4c5c.onrender.com/api/course/");
+            const fetchData = response.data;
+            setCoursesDetail(fetchData);
+            setCopyData(fetchData);
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                console.error(error.message);
+            } else {
+                console.error('An unexpected error occurred:', error);
+            }
+        }
+    };
 
-    // Fetch data on addCourse change
     useEffect(() => {
         getData();
     }, [addCourse]);
 
-    // Search functionality
     useEffect(() => {
         searchData(searchQuery);
     }, [searchQuery]);
@@ -67,29 +59,27 @@ const Courses = () => {
         } else {
             setCoursesDetail(copyData);
         }
-    }
+    };
 
-    // Toggle for adding course
     const handleToggle = () => {
         setAddCourse(false);
-    }
+    };
 
-    // Dropdown menu for actions
     const toggleDropdown = (id: number) => {
         setDropdownOpenIndex(dropdownOpenIndex === id ? null : id);
     };
 
     const addFunction = () => {
         setAddCourse(true);
-        setRows(undefined); // Reset to undefined for new course
+        setRows(undefined);
         setDropdownOpenIndex(null);
-    }
+    };
 
     const editFunction = (data: Course) => {
         setAddCourse(true);
         setRows(data);
         setDropdownOpenIndex(null);
-    }
+    };
 
     const deleteFunction = (data: Course) => {
         confirmAlert({
@@ -101,45 +91,58 @@ const Courses = () => {
                     onClick: () => deleteRow(data)
                 },
                 {
-                    label: 'No',
+                    label: 'No'
                 }
             ]
         });
         setDropdownOpenIndex(null);
-    }
+    };
 
     const deleteRow = async (data: Course) => {
         let id = data.id;
 
-        axios.delete(`https://backend-4c5c.onrender.com/api/course/${id}/`)
-            .then(response => {
-                toast('Deleted Successfully!', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                });
-                getData();
-            })
-            .catch(error => {
-                toast.error(error.message, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "light",
-                    transition: Bounce,
-                });
+        try {
+            await axios.delete(`https://backend-4c5c.onrender.com/api/course/${id}/`);
+            toast('Deleted Successfully!', {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "light",
+                transition: Bounce,
             });
-    }
+            getData();
+        } catch (error) {
+            if (axios.isAxiosError(error)) {
+                toast.error(`Deletion Failed! ${error.message}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            } else {
+                toast.error('Deletion Failed!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "light",
+                    transition: Bounce,
+                });
+            }
+        }
+    };
 
     return (
         <>
@@ -175,7 +178,6 @@ const Courses = () => {
                                             <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
                                         </svg>
                                     </button>
-                                    {/* Dropdown menu */}
                                     <div
                                         id="dropdown"
                                         className={`z-10 ${dropdownOpenIndex === course.id ? '' : 'hidden'} text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-4 top-12`}
