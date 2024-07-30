@@ -1,32 +1,24 @@
-const path = require('path');
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    env: {
-        MYSQL_HOST: '127.0.0.1',
-        MYSQL_PORT: '3306',
-        MYSQL_DATABASE: 'editBackend',
-        MYSQL_USER: 'root',
-        MYSQL_PASSWORD: '',
-    },
-    images: {
-        domains: ['127.0.0.1'],
-    },
-    webpack(config, { isServer }) {
-        if (!isServer) {
-            config.cache = {
-                type: 'filesystem',
-                cacheDirectory: path.resolve(__dirname, '.next/cache'),
-                buildDependencies: {
-                    config: [__filename]
-                }
-            };
-        }
-        return config;
-    }
+  images: {
+    // Use remotePatterns for specific domains and protocols
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'cdn.sanity.io',
+        port: '', // Keep empty if no port is specified
+      },
+      {
+        protocol: 'https',
+        hostname: 'backend-4c5c.onrender.com', // Add your backend URL here if needed
+      },
+    ],
+    // Use domains for local development domains
+    domains: [
+      'localhost',
+      '127.0.0.1',
+    ],
+  },
 };
 
 module.exports = nextConfig;
-
-
-

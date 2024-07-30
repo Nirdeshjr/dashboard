@@ -1,61 +1,72 @@
 import React, { useState } from "react";
-import { ToastContainer, toast, Bounce } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+
+
+//for tostify success after insert items
+import { ToastContainer, toast, Bounce } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+//ckeditor
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import axios, { AxiosError } from "axios";
 
-const AddCourse = ({ handleTogglePage, rows }) => {
+//icons
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import axios from "axios";
+
+const AddCourse = ({ handleTooglePage, rows }) => {
   const [formData, setFormData] = useState({
-    id: rows?.id || "",
-    course_name: rows?.course_name || "",
-    description: rows?.description || "",
-    duration: rows?.duration || "",
+    id: rows.id,
+    course_name: rows.course_name,
+    description: rows.description,
+    duration: rows.duration,
     course_image: null,
     course_extra: null,
-    detail: rows?.detail || "",
+    detail: rows.detail,
   });
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
-    if (files) {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: files[0],
-      }));
+    if (name === "course_image") {
+      setFormData({
+        ...formData,
+        course_image: files[0],
+      });
+    } else if (name === "course_extra") {
+      setFormData({
+        ...formData,
+        course_extra: files[0],
+      });
     } else {
-      setFormData((prevData) => ({
-        ...prevData,
+      setFormData({
+        ...formData,
         [name]: value,
-      }));
+      });
     }
   };
 
+  //add or edit function
   const submitCourse = async (e) => {
     e.preventDefault();
+
     const formDataToSend = new FormData();
     formDataToSend.append("course_name", formData.course_name);
     formDataToSend.append("duration", formData.duration);
     formDataToSend.append("description", formData.description);
-    if (formData.course_image) {
-      formDataToSend.append("course_image", formData.course_image);
-    }
-    if (formData.course_extra) {
-      formDataToSend.append("course_extra", formData.course_extra);
-    }
+    formDataToSend.append("course_image", formData.course_image);
+    formDataToSend.append("course_extra", formData.course_extra);
     formDataToSend.append("detail", formData.detail);
 
     try {
       let response;
       if (rows) {
+        const id = formData.id;
         response = await axios.put(
-          `https://backend-4c5c.onrender.com/api/course/${formData.id}/`,
+          `http://127.0.0.1:8000/api/course/${id}/`,
           formDataToSend
         );
       } else {
         response = await axios.post(
-          "https://backend-4c5c.onrender.com/api/course/",
+          "http://127.0.0.1:8000/api/course/",
           formDataToSend
         );
       }
@@ -71,51 +82,29 @@ const AddCourse = ({ handleTogglePage, rows }) => {
         theme: "light",
         transition: Bounce,
       });
-      handleTogglePage();
-      setFormData({
-        id: "",
-        course_name: "",
-        description: "",
-        duration: "",
-        course_image: null,
-        course_extra: null,
-        detail: "",
-      });
+      handleTooglePage();
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        toast.error(`Submission Failed! ${error.message}`, {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      } else {
-        toast.error('Submission Failed!', {
-          position: "top-right",
-          autoClose: 5000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "light",
-          transition: Bounce,
-        });
-      }
+      toast.error("Submission Failed!", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        transition: Bounce,
+      });
     }
+
   };
 
   return (
     <>
-      <ToastContainer />
+    <ToastContainer/>
       <div
         className="flex justify-start cursor-pointer"
-        onClick={handleTogglePage}
+        onClick={handleTooglePage}
       >
         <ArrowBackIcon className="mr-2" />
         <h2 className="font-bold mb-4">Go Back</h2>
@@ -129,7 +118,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="text"
-              className="border-2 border-gray-300 p-2 w-full"
+              className="border-2 border-gray-300 p-2 w-full double_input"
               name="course_name"
               id="course_name"
               value={formData.course_name}
@@ -144,7 +133,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="number"
-              className="border-2 border-gray-300 p-2 w-full"
+              className="border-2 border-gray-300 p-2 w-full double_input"
               name="duration"
               id="duration"
               value={formData.duration}
@@ -159,7 +148,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
             <br />
             <input
               type="text"
-              className="border-2 border-gray-300 p-2 w-full"
+              className="border-2 border-gray-300 p-2 w-full double_input"
               name="description"
               id="description"
               value={formData.description}
@@ -169,28 +158,30 @@ const AddCourse = ({ handleTogglePage, rows }) => {
           </div>
           <div className="mb-3 mr-5">
             <label className="text-xl text-gray-600">
-              Course Image <span className="text-red-500">*</span>
+              Course Image<span className="text-red-500">*</span>
             </label>
             <br />
             <input
               type="file"
-              className="border-2 border-gray-300 p-2 w-full"
+              className="border-2 border-gray-300 p-2 w-full double_input"
               name="course_image"
               id="course_image"
               onChange={handleChange}
+              required
             />
           </div>
           <div className="mb-3 mr-5">
             <label className="text-xl text-gray-600">
-              Course Extra Image For Body
+              Course Extra Image For Body<span className="text-red-500">*</span>
             </label>
             <br />
             <input
               type="file"
-              className="border-2 border-gray-300 p-2 w-full"
+              className="border-2 border-gray-300 p-2 w-full double_input"
               name="course_extra"
               id="course_extra"
               onChange={handleChange}
+              required
             />
           </div>
         </div>
@@ -201,6 +192,7 @@ const AddCourse = ({ handleTogglePage, rows }) => {
           <br />
           <CKEditor
             editor={ClassicEditor}
+            onInit={(editor) => {}}
             data={formData.detail}
             onChange={(event, editor) => {
               const data = editor.getData();
@@ -219,4 +211,3 @@ const AddCourse = ({ handleTogglePage, rows }) => {
 };
 
 export default AddCourse;
-

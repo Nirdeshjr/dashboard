@@ -7,4 +7,3 @@ export type Course ={
     course_image: string | null,
     course_extra_img: string | null,
 };
-  

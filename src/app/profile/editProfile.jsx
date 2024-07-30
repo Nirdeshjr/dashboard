@@ -55,7 +55,7 @@ const EditProfile = ({ editProfileHandle, adminData }) => {
     } else {
       try {
         const id = formData.id;
-        const response = await axios.put(`https://backend-4c5c.onrender.com/api/dashboard/${id}/`, formDataToSend);
+        const response = await axios.put(`http://127.0.0.1:8000/api/dashboard/${id}/`, formDataToSend);
         toast('Submitted Successfully!', {
           position: "top-right",
           autoClose: 5000,

@@ -1,16 +1,19 @@
-"use client";
+"use client"
 
-import React from 'react';
+import React from 'react'
 import Layout from '../components/Layout';
 import Courses from './courses';
+import { useState } from 'react';
 
-const CoursesPage = () => {
+
+const courses = () => {
     return (
         <Layout>
-            <Courses />
+            <>
+                <Courses />
+            </>
         </Layout>
-    );
-};
+    )
+}
 
-export default CoursesPage;
-
+export default courses

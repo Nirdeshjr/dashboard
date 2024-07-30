@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import React, { useState, useEffect } from 'react';
 import { Button } from '@mui/material';
@@ -8,12 +8,12 @@ import { ToastContainer, toast, Bounce } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-import AddGallery from './addgallery';
+import AddGallery from './addGallery';
 import axios from 'axios';
 import { Gallery } from '@/types/gallery';
 
 const GalleryPage = () => {
-    const [addGalleryToggle, setAddGalleryToggle] = useState<boolean>(false);
+    const [addGalleryToggle, setAddGalleryToggle] = useState(false);
     const [galleryData, setGalleryData] = useState<Gallery[]>([]);
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
     const [rows, setRows] = useState<Gallery | null>(null);
@@ -25,7 +25,7 @@ const GalleryPage = () => {
     }
 
     const getData = () => {
-        axios.get("https://backend-4c5c.onrender.com/api/gallery/")
+        axios.get("http://127.0.0.1:8000/api/gallery/")
             .then(response => {
                 const fetchData = response.data;
                 setGalleryData(fetchData);
@@ -56,7 +56,7 @@ const GalleryPage = () => {
 
     const addFunction = () => {
         setAddGalleryToggle(true);
-        setRows(null); // Set to null for new gallery
+        setRows("");
         setDropdownOpenIndex(null);
     }
 
@@ -86,7 +86,7 @@ const GalleryPage = () => {
     const deleteRow = async (data: Gallery) => {
         let id = data.id;
 
-        axios.delete(`https://backend-4c5c.onrender.com/api/gallery/${id}/`)
+        axios.delete(`http://127.0.0.1:8000/api/gallery/${id}/`)
             .then(response => {
                 toast('Deleted Successfully!', {
                     position: "top-right",
@@ -117,11 +117,12 @@ const GalleryPage = () => {
     }
 
     const searchData = (searchQuery: string) => {
+        let filterData: Gallery[] = galleryData;
         if (searchQuery) {
-            const filteredData = copyData.filter(gallery =>
+            filterData = galleryData.filter(gallery =>
                 gallery.name.toLowerCase().includes(searchQuery.toLowerCase())
             );
-            setGalleryData(filteredData);
+            setGalleryData(filterData);
         } else {
             setGalleryData(copyData);
         }
@@ -146,19 +147,19 @@ const GalleryPage = () => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             className='mb-2 px-2 py-2 border-rounded'
                         />
-                        <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={addFunction}>
+                        <Button variant="outlined" className='mb-2' endIcon={<ControlPointIcon />} onClick={() => addFunction()}>
                             Add Gallery
                         </Button>
                     </div>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
-                        {galleryData.map((gallery) => (
-                            <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow relative" key={gallery.id}>
+                        {galleryData.map((gallery, index) => (
+                            <div className="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow relative" key={index}>
                                 <div className="relative">
                                     <button
                                         id="dropdownButton"
                                         className="absolute top-2 right-2 inline-block text-gray-500 dark:text-gray-400 hover:bg-gray-100 focus:ring-4 focus:outline-none rounded-lg text-sm p-1.5"
                                         type="button"
-                                        onClick={() => toggleDropdown(gallery.id)}
+                                        onClick={() => toggleDropdown(index)}
                                     >
                                         <span className="sr-only">Open dropdown</span>
                                         <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
@@ -167,7 +168,7 @@ const GalleryPage = () => {
                                     </button>
                                     <div
                                         id="dropdown"
-                                        className={`z-10 ${dropdownOpenIndex === gallery.id ? '' : 'hidden'} text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-2 top-10`}
+                                        className={`z-10 ${dropdownOpenIndex === index ? '' : 'hidden'} text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow w-44 absolute right-2 top-10`}
                                     >
                                         <ul className="py-2" aria-labelledby="dropdownButton">
                                             <li>
@@ -200,4 +201,6 @@ const GalleryPage = () => {
         </>
     );
 };
+
 export default GalleryPage;
+

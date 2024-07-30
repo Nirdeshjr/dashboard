@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -17,7 +17,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Collapse } from '@mui/material';
 
-//icons
+//icon
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -32,9 +32,13 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CollectionsIcon from '@mui/icons-material/Collections';
+import FacebookIcon from '@mui/icons-material/Facebook';
+
+
 
 import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 
 const drawerWidth = 240;
 
@@ -43,36 +47,24 @@ interface Props {
   children: React.ReactNode;
 }
 
-const iconMap: { [key: string]: React.ReactElement } = {
-  Dashboard: <DashboardIcon />,
-  Inbox: <InboxIcon />,
-  Members: <PeopleIcon />,
-  Courses: <MenuBookIcon />,
-  Clients: <HandshakeIcon />,
-  Vacancy: <NoteAltIcon />,
-  Projects: <BusinessCenterIcon />,
-  Profile: <PersonIcon />,
-  Gallery: <CollectionsIcon />,
-  Blog: <AttractionsIcon />,
-  Products: <BusinessCenterIcon />,
-  News: <NewspaperIcon />,
-};
+
 
 export default function Layout(props: Props) {
-  const { window, children } = props;
+  const { window } = props;
+  const { children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
-  const [isCollapse, setIsCollapse] = React.useState(false);
-
   const router = useRouter();
-  const path = usePathname() || '';
+  const path = usePathname();
 
-  React.useEffect(() => {
-    const data = localStorage.getItem("Admin data");
-    if (!data) {
-      router.push("/signup");
-    }
-  }, [router]);
+  //local storage
+  const data=localStorage.getItem("Admin data");
+  console.log(data);
+  if(!data){
+    router.push("/signup")
+  }
+
+
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -89,24 +81,27 @@ export default function Layout(props: Props) {
     }
   };
 
+  //handle collapse
+  const [IsCollapse, setIsCollapse] = React.useState(false);
   const handleCollapse = () => {
-    setIsCollapse(!isCollapse);
-  };
+    setIsCollapse(!IsCollapse);
+  }
 
+  //logout
   const handleLogout = () => {
     localStorage.clear();
-    router.push('/signup');
-  };
+    router.push('/signup')
+  }
 
   const drawer = (
     <div>
-      <Toolbar>
+      <Toolbar >
         <Image src={'/Images/logo.ico'} alt='logo' width={45} height={45} />
         <h2 className='text-lg text-bold'><span className='mr-1 text-amber-600'>eDIT</span><span className='text-blue-600'>Enterprises</span></h2>
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile', 'Gallery'].map((text, index) => (
+        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile','Gallery'].map((text, index) => (
           <ListItem key={text} disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
@@ -115,13 +110,24 @@ export default function Layout(props: Props) {
           >
             <ListItemButton>
               <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
-                {iconMap[text]}
+                {index === 0 && <DashboardIcon />}
+                {index === 1 && <InboxIcon />}
+                {index === 2 && <PeopleIcon />}
+                {index === 3 && <MenuBookIcon />}
+                {index === 4 && <HandshakeIcon />}
+                {index === 5 && <NoteAltIcon />}
+                {index === 6 && <BusinessCenterIcon />}
+                {index === 7 && <PersonIcon />}
+                {index === 8 && <CollectionsIcon />}
               </ListItemIcon>
               <ListItemText primary={text} />
             </ListItemButton>
           </ListItem>
         ))}
         <Divider />
+
+
+        {/* Can use this if needed dropdown */}
         <ListItem disablePadding onClick={handleCollapse}>
           <ListItemButton>
             <ListItemIcon>
@@ -129,13 +135,16 @@ export default function Layout(props: Props) {
             </ListItemIcon>
             <ListItemText primary="Blogs & More" />
           </ListItemButton>
-          {isCollapse ? <KeyboardArrowDownIcon /> : <ChevronRightIcon />}
+          {IsCollapse ? <KeyboardArrowDownIcon /> : <ChevronRightIcon />}
         </ListItem>
       </List>
       <Divider />
-      <Collapse in={isCollapse} timeout="auto" unmountOnExit>
+
+
+      {/* on click to above more option this section will open using collapse */}
+      <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
         <List className='ml-4'>
-          {['Blog', 'Products', 'News'].map((text) => (
+          {['Blog', 'Products', 'News'].map((text, index) => (
             <ListItem key={text} disablePadding
               className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
               onClick={() => {
@@ -144,7 +153,9 @@ export default function Layout(props: Props) {
             >
               <ListItemButton>
                 <ListItemIcon className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}>
-                  {iconMap[text]}
+                  {index === 0 && <AttractionsIcon />}
+                  {index === 1 && <BusinessCenterIcon />}
+                  {index === 2 && <NewspaperIcon />}
                 </ListItemIcon>
                 <ListItemText primary={text} />
               </ListItemButton>
@@ -194,6 +205,7 @@ export default function Layout(props: Props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
+        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"

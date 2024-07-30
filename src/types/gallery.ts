@@ -3,5 +3,4 @@ export type Gallery = {
     name: string,
     image: string | null,
     text: string,
-    title: string,
 }

@@ -29,7 +29,7 @@ const AddProgress = ({ handleProgressToggle, projectDataForProgress }) => {
             future_plans: formData.future_plans,
         };
 
-        axios.post("https://backend-4c5c.onrender.com/api/progress/", progressData)
+        axios.post("http://127.0.0.1:8000/api/progress/", progressData)
             .then((response) => {
                 toast("Submitted Successfully!", {
                     position: "top-right",

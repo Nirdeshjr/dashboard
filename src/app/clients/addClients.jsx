@@ -44,12 +44,12 @@ const AddClients = ({ handleChangeToogle, rows = {} }) => {
       if (formData.id) {
         const id = formData.id;
         response = await axios.put(
-          `https://backend-4c5c.onrender.com/api/client/${id}/`,
+          `http://127.0.0.1:8000/api/client/${id}/`,
           formDataToSubmit
         );
       } else {
         response = await axios.post(
-          "https://backend-4c5c.onrender.com/api/client/",
+          "http://127.0.0.1:8000/api/client/",
           formDataToSubmit
         );
       }

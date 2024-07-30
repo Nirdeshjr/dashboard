@@ -46,9 +46,9 @@ const AddProjects = ({ handleProjectsToogle, data }) => {
       let response;
       if (formData.id) {
         const id = formData.id;
-        response = await axios.put(`https://backend-4c5c.onrender.com/api/projects/${id}/`, projectData);
+        response = await axios.put(`http://127.0.0.1:8000/api/projects/${id}/`, projectData);
       } else {
-        response = await axios.post("https://backend-4c5c.onrender.com/api/projects/", projectData);
+        response = await axios.post("http://127.0.0.1:8000/api/projects/", projectData);
       }
 
       toast("Submitted Successfully!", {

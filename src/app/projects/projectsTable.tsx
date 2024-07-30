@@ -143,7 +143,7 @@ const ProjectsTable: React.FC = () => {
   const [rows, setRows] = useState<ProjectDataType | null>(null);
 
   const getData = () => {
-    axios.get("https://backend-4c5c.onrender.com/api/projects/")
+    axios.get("http://127.0.0.1:8000/api/projects/")
       .then(response => {
         const fetchedData = response.data;
         const sortedData = fetchedData.sort((a: ProjectDataType, b: ProjectDataType) => new Date(b.deadline).getTime() - new Date(a.deadline).getTime());
@@ -154,7 +154,7 @@ const ProjectsTable: React.FC = () => {
         console.log("Error ", err);
       })
 
-    axios.get("https://backend-4c5c.onrender.com/api/progress/")
+    axios.get("http://127.0.0.1:8000/api/progress/")
       .then(response => {
         const fetchedData = response.data;
         const sortedData = fetchedData.sort((a: ProgressDataType, b: ProgressDataType) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -207,8 +207,8 @@ const ProjectsTable: React.FC = () => {
   const deleteRow = async (data: ProjectDataType) => {
     let id = data.id;
 
-    axios.delete(`https://backend-4c5c.onrender.com/api/projects/${id}/`),
-    axios.delete(`https://backend-4c5c.onrender.com/api/project/${id}/`)
+    axios.delete(`http://127.0.0.1:8000/api/projects/${id}/`),
+    axios.delete(`http://127.0.0.1:8000/api/progress/project/${id}/`)
       .then(response => {
         toast('Deleted Successfully !', {
           position: "top-right",

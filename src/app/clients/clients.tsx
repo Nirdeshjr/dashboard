@@ -16,61 +16,49 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 //component
 import AddClients from './addClients';
 
-//client data type
+//client data tyoe
 import { Client } from '@/types/client';
 import axios from 'axios';
 
+
 const Clients = () => {
-    // Toggle
+    //toogle
     const [addClientsToogle, setAddClientsToogle] = useState(false);
     const handleChange = () => {
         setAddClientsToogle(false);
     }
 
-    // Data
+    //data
     const [clientsDetail, setClientsDetail] = useState<Client[]>([]);
-    const [copyData, setCopyData] = useState<Client[]>([]);
-    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    const getData = () => {
+        axios.get("http://127.0.0.1:8000/api/client/")
+            .then(response => {
+                const fetchData = response.data;
+                setClientsDetail(fetchData);
+                setCopyData(response.data)
+            })
+    }
 
     useEffect(() => {
         getData();
     }, [addClientsToogle]);
 
-    const getData = () => {
-        axios.get("https://backend-4c5c.onrender.com/api/client/")
-            .then(response => {
-                const fetchData = response.data;
-                setClientsDetail(fetchData);
-                setCopyData(fetchData);
-            })
-    }
 
-    useEffect(() => {
-        searchData(searchQuery);
-    }, [searchQuery]);
-
-    const searchData = (searchQuery: string) => {
-        let filterData: Client[] = copyData;
-        if (searchQuery) {
-            filterData = copyData.filter(client =>
-                client.client_name.toLowerCase().includes(searchQuery.toLowerCase())
-            );
-        }
-        setClientsDetail(filterData);
-    }
-
-    // Toggle edit and delete
+    //toogle edit and delete
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
+
     const toggleDropdown = (id: number) => {
         setDropdownOpenIndex(dropdownOpenIndex === id ? null : id);
     };
 
-    // Add function
-    const [rows, setRows] = useState<Client | undefined>(undefined);
+
+    //add function 
+    const [rows, setRows] = useState<Client>();
 
     const addFunction = () => {
         setAddClientsToogle(true);
-        setRows(undefined); // Reset the state to undefined
+        setRows("");
         setDropdownOpenIndex(null);
     }
 
@@ -100,7 +88,7 @@ const Clients = () => {
     const deleteRow = async (data: Client) => {
         let id = data.id;
 
-        axios.delete(`https://backend-4c5c.onrender.com/api/client/${id}/`)
+        axios.delete(`http://127.0.0.1:8000/api/client/${id}/`)
             .then(response => {
                 toast('Deleted Successfully !', {
                     position: "top-right",
@@ -128,6 +116,27 @@ const Clients = () => {
                     transition: Bounce,
                 });
             });
+    }
+
+    //for search function 
+    const [copyData, setCopyData] = useState<Client[]>([]);//copying to use later in the filtering process
+    const [searchQuery, setSearchQuery] = useState<string>('');
+
+    useEffect(() => {
+        searchData(searchQuery);
+    }, [searchQuery])
+
+    const searchData = (searchQuery: string) => {
+        let filterData: Client[] = clientsDetail;
+        if (searchQuery) {
+            filterData = clientsDetail.filter(client =>
+                client.client_name.toLowerCase().includes(searchQuery.toLocaleLowerCase())
+            )
+            setClientsDetail(filterData);
+        }
+        else {
+            setClientsDetail(copyData);
+        }
     }
 
     return (
@@ -180,7 +189,7 @@ const Clients = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-col items-center pb-10">
-                                    <Image className="w-24 h-24 mb-3 rounded-full shadow-lg" src={client.client_image || "/Images/course.png"} alt="Client image" width={90} height={70} />
+                                    <Image className="w-24 h-24 mb-3 rounded-full shadow-lg" src={client.client_image || "/Images/course.png"} alt="Bonnie image" width={90} height={70} />
                                     <h5 className="mb-1 text-xl font-medium text-gray-900">{client.client_name}</h5>
                                     <span className="text-sm text-gray-500 ">{client.review}</span>
                                     <div className="flex mt-4 md:mt-6">
@@ -193,7 +202,7 @@ const Clients = () => {
                     </div>
                 </>
             )}
-            <ToastContainer />
+
         </>
     );
 };

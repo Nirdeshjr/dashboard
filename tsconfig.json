@@ -1,45 +1,28 @@
 {
   "compilerOptions": {
     "lib": ["dom", "dom.iterable", "esnext"],
-    "allowJs": false,
+    "baseUrl": ".",
+    "paths": {
+			"@/*": ["./src/*"]
+		},
+    "allowJs": true,
     "skipLibCheck": true,
-    "strict": true,
+    "strict": false,
+    "forceConsistentCasingInFileNames": true,
     "noEmit": true,
+    "incremental": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
-    "incremental": true,
     "plugins": [
       {
         "name": "next"
       }
-    ],
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts",
-    "custom.d.ts", // Add this line to include custom type declarations
-    "src/app/vacancy/AddVacancy.tsx",
-    "src/app/vacancy/VacancyList.tsx",
-    "src/app/dashboard/card.tsx",
-    "src/app/dashboard/cardsData.ts",
-    "src/app/dashboard/Cards.tsx",
-    "src/app/dashboard/page.tsx",
-    "src/app/dashboard/dashboard.tsx",
-    "src/app/profile/profileCards.tsx",
-    "src/app/profile/editProfile.tsx",
-    "src/app/courses/addCourse.tsx",
-    "src/app/clients/addClients.tsx"
-  ],
+  "include": ["next-env.d.ts", ".next/types/**/*.ts", "**/*.ts", "**/*.tsx", "src/components/AdminMembers/AddMember.jsx", "src/components/AdminGallery/addgallery.jsx", "src/components/AdminGallery/gallery.jsx"],
   "exclude": ["node_modules"]
 }
-
-

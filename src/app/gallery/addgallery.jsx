@@ -32,8 +32,8 @@ const AddGallery = ({ handleChangeToogle, data }) => {
 
         try {
             const response = formData.id ?
-                await axios.put(`https://backend-4c5c.onrender.com/api/gallery/${formData.id}/`, galleryData) :
-                await axios.post("https://backend-4c5c.onrender.com/api/gallery/", galleryData);
+                await axios.put(`http://127.0.0.1:8000/api/gallery/${formData.id}/`, galleryData) :
+                await axios.post("http://127.0.0.1:8000/api/gallery/", galleryData);
 
             toast("Submitted Successfully!", {
                 position: "top-right",
@@ -79,7 +79,7 @@ const AddGallery = ({ handleChangeToogle, data }) => {
                         <br />
                         <input
                             type="text"
-                            className="border-2 border-gray-300 p-2 w-full"
+                            className="border-2 border-gray-300 p-2 w-full double_input"
                             name="name"
                             id="name"
                             value={formData.name}
@@ -94,7 +94,7 @@ const AddGallery = ({ handleChangeToogle, data }) => {
                         <br />
                         <input
                             type="text"
-                            className="border-2 border-gray-300 p-2 w-full"
+                            className="border-2 border-gray-300 p-2 w-full double_input"
                             name="text"
                             id="text"
                             value={formData.text}
@@ -109,7 +109,7 @@ const AddGallery = ({ handleChangeToogle, data }) => {
                         <br />
                         <input
                             type="file"
-                            className="border-2 border-gray-300 p-2 w-full"
+                            className="border-2 border-gray-300 p-2 w-full double_input"
                             name="image"
                             id="image"
                             onChange={handleChange}
