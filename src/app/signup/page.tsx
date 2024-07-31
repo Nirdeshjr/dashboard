@@ -24,7 +24,7 @@ const Login = () => {
 
   //api fetch
   const getData = () => {
-    axios.get("https://backend-4c5c.onrender.com//api/dashboard/")
+    axios.get("https://backend-4c5c.onrender.com/api/dashboard/")
       .then(response => {
         const fetchedData = response.data[0];
         setAdminData(fetchedData);
