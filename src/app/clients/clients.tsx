@@ -6,20 +6,21 @@ import ControlPointIcon from '@mui/icons-material/ControlPoint';
 import Image from 'next/image';
 import axios from 'axios';
 import { ToastContainer, toast, Bounce } from 'react-toastify';
-import { confirmAlert } from 'react-confirm-alert';
-import 'react-toastify/dist/ReactToastify.css';
-import 'react-confirm-alert/src/react-confirm-alert.css';
 import AddClients from './addClients';
 import { Client } from '@/types/client';
+import Modal from 'react-modal';
+
+Modal.setAppElement('#__next'); // Make sure to set the app element for accessibility
 
 const Clients = () => {
-    // Toggle for adding/editing clients
     const [isAddingClient, setIsAddingClient] = useState(false);
     const [currentClient, setCurrentClient] = useState<Client | undefined>();
     const [clients, setClients] = useState<Client[]>([]);
     const [filteredClients, setFilteredClients] = useState<Client[]>([]);
     const [searchQuery, setSearchQuery] = useState('');
     const [dropdownOpenIndex, setDropdownOpenIndex] = useState<number | null>(null);
+    const [confirmModalOpen, setConfirmModalOpen] = useState(false);
+    const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
     // Fetch clients data from the API
     const fetchClients = async () => {
@@ -64,27 +65,19 @@ const Clients = () => {
         setDropdownOpenIndex(null);
     };
 
-    // Delete client function
+    // Open confirmation modal
     const handleDeleteClient = (client: Client) => {
-        confirmAlert({
-            title: 'Confirm to submit',
-            message: 'Are you sure you want to delete this client?',
-            buttons: [
-                {
-                    label: 'Yes',
-                    onClick: () => deleteClient(client)
-                },
-                {
-                    label: 'No',
-                }
-            ]
-        });
+        setClientToDelete(client);
+        setConfirmModalOpen(true);
         setDropdownOpenIndex(null);
     };
 
-    const deleteClient = async (client: Client) => {
+    // Delete client function
+    const deleteClient = async () => {
+        if (!clientToDelete) return;
+
         try {
-            await axios.delete(`http://127.0.0.1:8000/api/client/${client.id}/`);
+            await axios.delete(`http://127.0.0.1:8000/api/client/${clientToDelete.id}/`);
             toast.success('Deleted Successfully!', {
                 position: "top-right",
                 autoClose: 5000,
@@ -107,6 +100,9 @@ const Clients = () => {
                 theme: "light",
                 transition: Bounce,
             });
+        } finally {
+            setConfirmModalOpen(false);
+            setClientToDelete(null);
         }
     };
 
@@ -183,9 +179,28 @@ const Clients = () => {
                     </div>
                 </>
             )}
+
+            {/* Confirmation Modal */}
+            <Modal
+                isOpen={confirmModalOpen}
+                onRequestClose={() => setConfirmModalOpen(false)}
+                contentLabel="Confirmation Modal"
+                className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75"
+                overlayClassName="fixed inset-0 bg-gray-500 bg-opacity-75"
+            >
+                <div className="bg-white p-4 rounded">
+                    <h2 className="text-xl">Confirm Deletion</h2>
+                    <p>Are you sure you want to delete this client?</p>
+                    <div className="mt-4 flex justify-end">
+                        <button onClick={() => setConfirmModalOpen(false)} className="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancel</button>
+                        <button onClick={deleteClient} className="bg-red-500 text-white px-4 py-2 rounded">Delete</button>
+                    </div>
+                </div>
+            </Modal>
         </>
     );
 };
 
 export default Clients;
+
 

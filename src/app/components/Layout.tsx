@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import PropTypes from 'prop-types';
 import * as React from 'react';
@@ -17,7 +17,7 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import { Collapse } from '@mui/material';
 
-//icon
+// icons
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
@@ -34,8 +34,6 @@ import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CollectionsIcon from '@mui/icons-material/Collections';
 import FacebookIcon from '@mui/icons-material/Facebook';
 
-
-
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation';
@@ -47,24 +45,30 @@ interface Props {
   children: React.ReactNode;
 }
 
-
-
 export default function Layout(props: Props) {
   const { window } = props;
   const { children } = props;
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const [isClosing, setIsClosing] = React.useState(false);
+  const [isBrowser, setIsBrowser] = React.useState(false);
   const router = useRouter();
   const path = usePathname();
 
-  //local storage
-  const data=localStorage.getItem("Admin data");
-  console.log(data);
-  if(!data){
-    router.push("/signup")
-  }
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsBrowser(true);
+    }
+  }, []);
 
-
+  React.useEffect(() => {
+    if (isBrowser) {
+      const data = localStorage.getItem("Admin data");
+      console.log(data);
+      if (!data) {
+        router.push("/signup");
+      }
+    }
+  }, [isBrowser, router]);
 
   const handleDrawerClose = () => {
     setIsClosing(true);
@@ -81,27 +85,29 @@ export default function Layout(props: Props) {
     }
   };
 
-  //handle collapse
+  // handle collapse
   const [IsCollapse, setIsCollapse] = React.useState(false);
   const handleCollapse = () => {
     setIsCollapse(!IsCollapse);
-  }
+  };
 
-  //logout
+  // logout
   const handleLogout = () => {
-    localStorage.clear();
-    router.push('/signup')
-  }
+    if (isBrowser) {
+      localStorage.clear();
+      router.push('/signup');
+    }
+  };
 
   const drawer = (
     <div>
-      <Toolbar >
+      <Toolbar>
         <Image src={'/Images/logo.ico'} alt='logo' width={45} height={45} />
         <h2 className='text-lg text-bold'><span className='mr-1 text-amber-600'>eDIT</span><span className='text-blue-600'>Enterprises</span></h2>
       </Toolbar>
       <Divider />
       <List>
-        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile','Gallery'].map((text, index) => (
+        {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile', 'Gallery'].map((text, index) => (
           <ListItem key={text} disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
@@ -125,9 +131,6 @@ export default function Layout(props: Props) {
           </ListItem>
         ))}
         <Divider />
-
-
-        {/* Can use this if needed dropdown */}
         <ListItem disablePadding onClick={handleCollapse}>
           <ListItemButton>
             <ListItemIcon>
@@ -139,9 +142,6 @@ export default function Layout(props: Props) {
         </ListItem>
       </List>
       <Divider />
-
-
-      {/* on click to above more option this section will open using collapse */}
       <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
         <List className='ml-4'>
           {['Blog', 'Products', 'News'].map((text, index) => (
@@ -205,7 +205,6 @@ export default function Layout(props: Props) {
         sx={{ width: { sm: drawerWidth }, flexShrink: { sm: 0 } }}
         aria-label="mailbox folders"
       >
-        {/* The implementation can be swapped with js to avoid SEO duplication of links. */}
         <Drawer
           container={container}
           variant="temporary"
