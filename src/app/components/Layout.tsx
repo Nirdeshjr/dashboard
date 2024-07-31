@@ -32,7 +32,6 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import NewspaperIcon from '@mui/icons-material/Newspaper';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import CollectionsIcon from '@mui/icons-material/Collections';
-import FacebookIcon from '@mui/icons-material/Facebook';
 
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -63,7 +62,6 @@ export default function Layout(props: Props) {
   React.useEffect(() => {
     if (isBrowser) {
       const data = localStorage.getItem("Admin data");
-      console.log(data);
       if (!data) {
         router.push("/signup");
       }
@@ -103,12 +101,17 @@ export default function Layout(props: Props) {
     <div>
       <Toolbar>
         <Image src={'/Images/logo.ico'} alt='logo' width={45} height={45} />
-        <h2 className='text-lg text-bold'><span className='mr-1 text-amber-600'>eDIT</span><span className='text-blue-600'>Enterprises</span></h2>
+        <h2 className='text-lg text-bold'>
+          <span className='mr-1 text-amber-600'>eDIT</span>
+          <span className='text-blue-600'>Enterprises</span>
+        </h2>
       </Toolbar>
       <Divider />
       <List>
         {['Dashboard', 'Inbox', 'Members', 'Courses', 'Clients', 'Vacancy', 'Projects', 'Profile', 'Gallery'].map((text, index) => (
-          <ListItem key={text} disablePadding
+          <ListItem
+            key={text}
+            disablePadding
             className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
             onClick={() => {
               router.push('/' + text.toLocaleLowerCase());
@@ -145,7 +148,9 @@ export default function Layout(props: Props) {
       <Collapse in={IsCollapse} timeout="auto" unmountOnExit>
         <List className='ml-4'>
           {['Blog', 'Products', 'News'].map((text, index) => (
-            <ListItem key={text} disablePadding
+            <ListItem
+              key={text}
+              disablePadding
               className={path.startsWith("/" + text.toLocaleLowerCase()) ? "text-blue-600 bg-slate-100" : "text-slate-700"}
               onClick={() => {
                 router.push('/' + text.toLocaleLowerCase());
@@ -249,3 +254,4 @@ Layout.propTypes = {
   window: PropTypes.func,
   children: PropTypes.node.isRequired,
 };
+
