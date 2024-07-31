@@ -1,15 +1,24 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    env: {
-        'MYSQL_HOST': '127.0.0.1',
-        'MYSQL_PORT': '3306',
-        'MYSQL_DATABASE': 'editBackend',
-        'MYSQL_USER': 'root',
-        'MYSQL_PASSWORD': '',
-    },
     images: {
-        domains: ['127.0.0.1'],
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'cdn.sanity.io',
+                port: '', // Keep empty if no port is specified
+            },
+            {
+                protocol: 'https',
+                hostname: 'backend-4c5c.onrender.com', // Allow images from backend URL if needed
+                port: '', // Keep empty if no port is specified
+            },
+        ],
+        domains: [
+            'localhost',
+            '127.0.0.1',
+        ],
     },
 };
 
 export default nextConfig;
+
