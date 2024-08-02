@@ -1,7 +1,6 @@
-"use client"
 import React from 'react';
-import Layout from '../components/Layout';
 import Image from 'next/image';
+import Layout from '../dashLayout';
 
 const blog = () => {
   return (

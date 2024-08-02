@@ -1,10 +1,15 @@
-import Image from "next/image";
-import Login from "./signup/page";
+import { Metadata } from "next";
+import Login from "./login/page";
+
+export const metadata: Metadata = {
+  title: "Edit UI",
+  description: "This is Home ",
+};
 
 export default function Home() {
   return (
-    <main>
+    <>
       <Login/>
-    </main>
+    </>
   );
 }

@@ -1,8 +1,6 @@
-" use client"
 import React from 'react';
-import Layout from '../components/Layout';
-import Notice from './notice';
-
+import Layout from '../dashLayout';
+import Notice from '@/components/News/notice';
 
 const News = () => {
     return (
@@ -14,4 +12,4 @@ const News = () => {
     )
 }
 
-export default News
+export default News;

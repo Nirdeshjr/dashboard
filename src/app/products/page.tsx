@@ -1,8 +1,6 @@
-" use client"
 import React from 'react';
-import Layout from '../components/Layout';
-
-import Products from './products';
+import Layout from '../dashLayout';
+import Products from '@/components/Product/products';
 
 const Gallery = () => {
     return (

@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
-import Layout from '../components/Layout';
-import ProjectsTable from './projectsTable';
+import React, { useState } from 'react';
+import Layout from '../dashLayout';
+import ProjectsTable from '@/components/Projects/projectsTable';
 
 const page = () => {
 

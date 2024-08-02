@@ -1,6 +1,6 @@
-" use client"
-import ProfileCards from './profileCards';
-import Layout from '../components/Layout';
+import React from 'react';
+import Layout from '../dashLayout';
+import ProfileCards from '@/components/Profile/profileCards';
 
 const Profile = () => {
   return (
